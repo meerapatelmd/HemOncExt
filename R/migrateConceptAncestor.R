@@ -29,7 +29,7 @@ migrateConceptAncestor <-
                         sql_statement <- SqlRender::render(SqlRender::readSql(path),
                                                            schema = source_schema)
 
-                        source <<-
+                        source <-
                                 pg13::query(conn = conn,
                                             sql_statement = sql_statement)
 

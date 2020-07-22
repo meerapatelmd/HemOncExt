@@ -6,7 +6,7 @@
 #' @param source_schema The schema where the main OMOP vocabularies are loaded.
 #' @export
 
-migrateConceptAncestor <-
+migrateConceptAncestor2 <-
         function(conn,
                  source_schema) {
 
