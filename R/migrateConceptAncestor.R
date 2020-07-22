@@ -24,12 +24,12 @@ migrateConceptAncestor <-
                 if (extension_nrow$count == 0) {
 
                         base <- system.file(package = "hemOncExt")
-                        path <- paste0(base, "/sql/migrateConceptAncestorA.sql")
+                        path <- paste0(base, "/sql/migrateConceptAncestor.sql")
 
                         sql_statement <- SqlRender::render(SqlRender::readSql(path),
                                                            schema = source_schema)
 
-                        sourceA <<-
+                        source <<-
                                 pg13::query(conn = conn,
                                             sql_statement = sql_statement)
 
@@ -37,7 +37,7 @@ migrateConceptAncestor <-
                         pg13::appendTable(conn = conn,
                                           schema = "hemonc_extension",
                                           tableName = tableName,
-                                          .data = sourceA)
+                                          .data = source)
                 }
 
         }
