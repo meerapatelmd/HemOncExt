@@ -1,130 +1,95 @@
---HINT DISTRIBUTE ON RANDOM
-CREATE TABLE @schema.concept (
-  concept_id			INTEGER			NOT NULL ,
-  concept_name			VARCHAR(255)	NOT NULL ,
-  domain_id				VARCHAR(20)		NOT NULL ,
-  vocabulary_id			VARCHAR(20)		NOT NULL ,
-  concept_class_id		VARCHAR(20)		NOT NULL ,
-  standard_concept		VARCHAR(1)		NULL ,
-  concept_code			VARCHAR(50)		NOT NULL ,
-  valid_start_date		DATE			NOT NULL ,
-  valid_end_date		DATE			NOT NULL ,
-  invalid_reason		VARCHAR(1)		NULL
-)
-;
+ALTER TABLE @schema.concept ADD CONSTRAINT fpk_concept_domain FOREIGN KEY (domain_id)  REFERENCES domain (domain_id);
+
+ALTER TABLE @schema.concept ADD CONSTRAINT fpk_concept_class FOREIGN KEY (concept_class_id)  REFERENCES concept_class (concept_class_id);
+
+ALTER TABLE @schema.concept ADD CONSTRAINT fpk_concept_vocabulary FOREIGN KEY (vocabulary_id)  REFERENCES vocabulary (vocabulary_id);
 
 
---HINT DISTRIBUTE ON RANDOM
-CREATE TABLE @schema.vocabulary (
-  vocabulary_id			VARCHAR(20)		NOT NULL,
-  vocabulary_name		VARCHAR(255)	NOT NULL,
-  vocabulary_reference	VARCHAR(255)	NOT NULL,
-  vocabulary_version	VARCHAR(255)	NULL,
-  vocabulary_concept_id	INTEGER			NOT NULL
-)
-;
+ALTER TABLE @schema.vocabulary ADD CONSTRAINT fpk_vocabulary_concept FOREIGN KEY (vocabulary_concept_id)  REFERENCES concept (concept_id);
 
 
---HINT DISTRIBUTE ON RANDOM
-CREATE TABLE @schema.domain (
-  domain_id			    VARCHAR(20)		NOT NULL,
-  domain_name		    VARCHAR(255)	NOT NULL,
-  domain_concept_id		INTEGER			NOT NULL
-)
-;
+ALTER TABLE @schema.domain ADD CONSTRAINT fpk_domain_concept FOREIGN KEY (domain_concept_id)  REFERENCES concept (concept_id);
 
 
---HINT DISTRIBUTE ON RANDOM
-CREATE TABLE @schema.concept_class (
-  concept_class_id			VARCHAR(20)		NOT NULL,
-  concept_class_name		VARCHAR(255)	NOT NULL,
-  concept_class_concept_id	INTEGER			NOT NULL
-)
-;
+ALTER TABLE @schema.concept_class ADD CONSTRAINT fpk_concept_class_concept FOREIGN KEY (concept_class_concept_id)  REFERENCES concept (concept_id);
 
 
---HINT DISTRIBUTE ON RANDOM
-CREATE TABLE @schema.concept_relationship (
-  concept_id_1			INTEGER			NOT NULL,
-  concept_id_2			INTEGER			NOT NULL,
-  relationship_id		VARCHAR(20)		NOT NULL,
-  valid_start_date		DATE			NOT NULL,
-  valid_end_date		DATE			NOT NULL,
-  invalid_reason		VARCHAR(1)		NULL
-  )
-;
+ALTER TABLE @schema.concept_relationship ADD CONSTRAINT fpk_concept_relationship_c_1 FOREIGN KEY (concept_id_1)  REFERENCES concept (concept_id);
+
+ALTER TABLE @schema.concept_relationship ADD CONSTRAINT fpk_concept_relationship_c_2 FOREIGN KEY (concept_id_2)  REFERENCES concept (concept_id);
+
+ALTER TABLE @schema.concept_relationship ADD CONSTRAINT fpk_concept_relationship_id FOREIGN KEY (relationship_id)  REFERENCES relationship (relationship_id);
 
 
---HINT DISTRIBUTE ON RANDOM
-CREATE TABLE @schema.relationship (
-  relationship_id			VARCHAR(20)		NOT NULL,
-  relationship_name			VARCHAR(255)	NOT NULL,
-  is_hierarchical			VARCHAR(1)		NOT NULL,
-  defines_ancestry			VARCHAR(1)		NOT NULL,
-  reverse_relationship_id	VARCHAR(20)		NOT NULL,
-  relationship_concept_id	INTEGER			NOT NULL
-)
-;
+ALTER TABLE @schema.relationship ADD CONSTRAINT fpk_relationship_concept FOREIGN KEY (relationship_concept_id)  REFERENCES concept (concept_id);
+
+ALTER TABLE @schema.relationship ADD CONSTRAINT fpk_relationship_reverse FOREIGN KEY (reverse_relationship_id)  REFERENCES relationship (relationship_id);
 
 
---HINT DISTRIBUTE ON RANDOM
-CREATE TABLE @schema.concept_synonym (
-  concept_id			INTEGER			NOT NULL,
-  concept_synonym_name	VARCHAR(1000)	NOT NULL,
-  language_concept_id	INTEGER			NOT NULL
-)
-;
+ALTER TABLE @schema.concept_synonym ADD CONSTRAINT fpk_concept_synonym_concept FOREIGN KEY (concept_id)  REFERENCES concept (concept_id);
+
+ALTER TABLE @schema.concept_synonym ADD CONSTRAINT fpk_concept_synonym_language_concept FOREIGN KEY (language_concept_id)  REFERENCES concept (concept_id);
 
 
---HINT DISTRIBUTE ON RANDOM
-CREATE TABLE @schema.concept_ancestor (
-  ancestor_concept_id		INTEGER		NOT NULL,
-  descendant_concept_id		INTEGER		NOT NULL,
-  min_levels_of_separation	INTEGER		NOT NULL,
-  max_levels_of_separation	INTEGER		NOT NULL
-)
-;
+ALTER TABLE @schema.concept_ancestor ADD CONSTRAINT fpk_concept_ancestor_concept_1 FOREIGN KEY (ancestor_concept_id)  REFERENCES concept (concept_id);
+
+ALTER TABLE @schema.concept_ancestor ADD CONSTRAINT fpk_concept_ancestor_concept_2 FOREIGN KEY (descendant_concept_id)  REFERENCES concept (concept_id);
 
 
---HINT DISTRIBUTE ON RANDOM
-CREATE TABLE @schema.source_to_concept_map (
-  source_code				VARCHAR(50)		NOT NULL,
-  source_concept_id			INTEGER			NOT NULL,
-  source_vocabulary_id		VARCHAR(20)		NOT NULL,
-  source_code_description	VARCHAR(255)	NULL,
-  target_concept_id			INTEGER			NOT NULL,
-  target_vocabulary_id		VARCHAR(20)		NOT NULL,
-  valid_start_date			DATE			NOT NULL,
-  valid_end_date			DATE			NOT NULL,
-  invalid_reason			VARCHAR(1)		NULL
-)
-;
+ALTER TABLE @schema.source_to_concept_map ADD CONSTRAINT fpk_source_to_concept_map_v_1 FOREIGN KEY (source_vocabulary_id)  REFERENCES vocabulary (vocabulary_id);
+
+ALTER TABLE @schema.source_to_concept_map ADD CONSTRAINT fpk_source_to_concept_map_v_2 FOREIGN KEY (target_vocabulary_id)  REFERENCES vocabulary (vocabulary_id);
+
+ALTER TABLE @schema.source_to_concept_map ADD CONSTRAINT fpk_source_to_concept_map_c_1 FOREIGN KEY (target_concept_id)  REFERENCES concept (concept_id);
 
 
---HINT DISTRIBUTE ON RANDOM
-CREATE TABLE @schema.drug_strength (
-  drug_concept_id				INTEGER		  	NOT NULL,
-  ingredient_concept_id			INTEGER		  	NOT NULL,
-  amount_value					NUMERIC		    NULL,
-  amount_unit_concept_id		INTEGER		  	NULL,
-  numerator_value				NUMERIC		    NULL,
-  numerator_unit_concept_id		INTEGER		  	NULL,
-  denominator_value				NUMERIC		    NULL,
-  denominator_unit_concept_id	INTEGER		  	NULL,
-  box_size						INTEGER		 	NULL,
-  valid_start_date				DATE		    NOT NULL,
-  valid_end_date				DATE		    NOT NULL,
-  invalid_reason				VARCHAR(1)  	NULL
-)
-;
+ALTER TABLE @schema.drug_strength ADD CONSTRAINT fpk_drug_strength_concept_1 FOREIGN KEY (drug_concept_id)  REFERENCES concept (concept_id);
+
+ALTER TABLE @schema.drug_strength ADD CONSTRAINT fpk_drug_strength_concept_2 FOREIGN KEY (ingredient_concept_id)  REFERENCES concept (concept_id);
+
+ALTER TABLE @schema.drug_strength ADD CONSTRAINT fpk_drug_strength_unit_1 FOREIGN KEY (amount_unit_concept_id)  REFERENCES concept (concept_id);
+
+ALTER TABLE @schema.drug_strength ADD CONSTRAINT fpk_drug_strength_unit_2 FOREIGN KEY (numerator_unit_concept_id)  REFERENCES concept (concept_id);
+
+ALTER TABLE @schema.drug_strength ADD CONSTRAINT fpk_drug_strength_unit_3 FOREIGN KEY (denominator_unit_concept_id)  REFERENCES concept (concept_id);
 
 
---HINT DISTRIBUTE ON RANDOM
-CREATE TABLE @schema.attribute_definition (
-  attribute_definition_id		  INTEGER			  NOT NULL,
-  attribute_name				      VARCHAR(255)	NOT NULL,
-  attribute_description			  TEXT	NULL,
-  attribute_type_concept_id		INTEGER			  NOT NULL,
-  attribute_syntax				    TEXT	NULL
-)
-;
+/************************
+*************************
+*************************
+*************************
+
+Unique constraints
+
+*************************
+*************************
+*************************
+************************/
+
+ALTER TABLE @schema.concept_synonym ADD CONSTRAINT uq_concept_synonym UNIQUE (concept_id, concept_synonym_name, language_concept_id);
+
+/************************
+*************************
+*************************
+*************************
+
+Check constraints
+
+*************************
+*************************
+*************************
+************************/
+
+ALTER TABLE @schema.concept ADD CONSTRAINT chk_c_concept_name CHECK (concept_name <> '');
+
+ALTER TABLE @schema.concept ADD CONSTRAINT chk_c_standard_concept CHECK (COALESCE(standard_concept,'C') in ('C','S'));
+
+ALTER TABLE @schema.concept ADD CONSTRAINT chk_c_concept_code CHECK (concept_code <> '');
+
+ALTER TABLE @schema.concept ADD CONSTRAINT chk_c_invalid_reason CHECK (COALESCE(invalid_reason,'D') in ('D','U'));
+
+
+ALTER TABLE @schema.concept_relationship ADD CONSTRAINT chk_cr_invalid_reason CHECK (COALESCE(invalid_reason,'D')='D');
+
+
+ALTER TABLE @schema.concept_synonym ADD CONSTRAINT chk_csyn_concept_synonym_name CHECK (concept_synonym_name <> '');
