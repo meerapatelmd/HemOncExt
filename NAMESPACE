@@ -2,5 +2,6 @@
 
 export(createHemOncExtSchema)
 export(ddlHemOncExtSchema)
+export(migrateConcept)
 import(SqlRender)
 import(pg13)

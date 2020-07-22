@@ -10,5 +10,5 @@ migrateConcept(conn, source_schema)
 \item{source_schema}{The schema where the main OMOP vocabularies are loaded.}
 }
 \description{
-Migrate HemOnc and RxNorm Vocabularies
+This function executes on the condition that there are zero rows in the concept table.
 }
