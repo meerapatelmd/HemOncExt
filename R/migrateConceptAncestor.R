@@ -2,6 +2,7 @@
 #' @description This function executes on the condition that there are zero rows in the concept_ancestor table in the hemonc_extension schema.
 #' @import SqlRender
 #' @import pg13
+#' @import dplyr
 #' @param source_schema The schema where the main OMOP vocabularies are loaded.
 #' @export
 
