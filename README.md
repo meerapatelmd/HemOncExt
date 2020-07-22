@@ -8,8 +8,20 @@
 ## Initial Setup
 1. Create a HemOnc Extension Schema in a database and instantiate the OMOP Vocabulary Tables (createHemOncExtSchema.R)
 2. Instantiate OMOP Vocabulary Tables (ddlHemOncExtSchema.R)
-3. Migrate HemOnc Concepts and RxNorm/RxNorm Ingredients and Precise Ingredients to the new HemOnc Extension Schema to create new relationships  
-4. Recommended Maintenance: every time an update is done to the HemOnc or RxNorm vocabulary, the 
+3. Migrate HemOnc Concepts and RxNorm/RxNorm Ingredients and Precise Ingredients to the new HemOnc Extension Schema to create new relationships: 
+```hemOncExt::createHemOncExtSchema(conn = conn)
+hemOncExt::ddlHemOncExtSchema(conn = conn)
+hemOncExt::migrateConcept(conn = conn,
+                          source_schema = "public")
+hemOncExt::migrateConceptAncestor(conn = conn,
+                                  source_schema = "public")
+hemOncExt::migrateConceptRelationship(conn = conn,
+                                      source_schema = "public")
+hemOncExt::migrateConceptSynonym(conn = conn,
+                                 source_schema = "public")```  
+                                 
+3. Apply constraints
+4. Recommended Maintenance: every time an update is done to the HemOnc or RxNorm vocabulary the schema should be dropped and refreshed with the updated set.
 
 4, Enumerate all NEW concepts with this batch into a single dataframe
 5. Populate NEW Concepts by concept_class_id:  
