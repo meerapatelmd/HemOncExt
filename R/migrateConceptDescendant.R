@@ -29,15 +29,27 @@ migrateConceptAncestor <-
                         sql_statement <- SqlRender::render(SqlRender::readSql(path),
                                                            schema = source_schema)
 
-                        sourceA <<-
+                        sourceA <-
                                 pg13::query(conn = conn,
                                             sql_statement = sql_statement)
 
 
+                        path <- paste0(base, "/sql/migrateConceptAncestorD.sql")
+
+                        sql_statement <- SqlRender::render(SqlRender::readSql(path),
+                                                           schema = source_schema)
+                        sourceD <-
+                                pg13::query(conn = conn,
+                                            sql_statement = sql_statement)
+
+                        source <- dplyr::bind_rows(sourceA,
+                                                   sourceD) %>%
+                                dplyr::distinct()
+
                         pg13::appendTable(conn = conn,
                                           schema = "hemonc_extension",
                                           tableName = tableName,
-                                          .data = sourceA)
+                                          .data = source)
                 }
 
         }

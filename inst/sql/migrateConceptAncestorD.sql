@@ -13,6 +13,6 @@ WHERE LOWER(vocabulary_id) IN ('rxnorm',
 
 SELECT d.*
 FROM target_concepts c
-LEFT JOIN @schema.concept_ancestor d
+INNER JOIN @schema.concept_ancestor d
 ON d.descendant_concept_id = c.concept_id
 ;
