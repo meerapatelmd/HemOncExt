@@ -3,5 +3,6 @@
 export(createHemOncExtSchema)
 export(ddlHemOncExtSchema)
 export(migrateConcept)
+export(migrateConceptAncestor)
 import(SqlRender)
 import(pg13)
