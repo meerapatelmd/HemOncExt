@@ -1,6 +1,6 @@
 # hemOncExt  
 ## Overview  
-*Create NEW oncology drug concepts with the relationship with any of the HemOnc Concepts, RxNorm Ingredient, and/or RxNorm Extension Precise Ingredient  
+* This package creates NEW oncology drug concepts with the appropriate OMOP relationship with any of the HemOnc, RxNorm Ingredient Concept Class, and/or RxNorm Extension Precise Ingredient Concept Class. 
 
 ## Requirements  
 1. Postgres database that has a schema with Athena vocabulary tables to migrate the HemOnc and RxNorm vocabularies to the extension and will also be the location of the `hemonc_extension` schema.  
