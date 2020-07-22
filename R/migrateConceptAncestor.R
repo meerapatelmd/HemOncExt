@@ -21,7 +21,7 @@ migrateConceptAncestor <-
 
                 # Nrow is 0, it means that the HemOnc and RxNorm concepts have not been migrated and will be migrated now
 
-                if (extension_nrow == 0) {
+                if (extension_nrow$count == 0) {
 
                         base <- system.file(package = "hemOncExt")
                         path <- paste0(base, "/sql/migrateConceptAncestorA.sql")

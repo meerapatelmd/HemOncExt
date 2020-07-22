@@ -1,5 +1,5 @@
 WITH target_concepts AS (
-SELECT DISTINCT concept_id
+SELECT *
 FROM @schema.concept
 WHERE LOWER(vocabulary_id) IN  ('hemonc')
 UNION
