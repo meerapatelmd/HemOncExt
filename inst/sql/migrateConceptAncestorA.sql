@@ -15,9 +15,4 @@ SELECT a.*
 FROM target_concepts c
 LEFT JOIN @schema.concept_ancestor a
 ON a.ancestor_concept_id = c.concept_id
-UNION
-SELECT d.*
-FROM target_concepts
-LEFT JOIN @schema.concept_ancestor d
-ON d.descendant_concept_id = c.concept_id
 ;
