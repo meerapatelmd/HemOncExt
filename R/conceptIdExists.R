@@ -4,7 +4,7 @@
 #' @param new_concept_id integer of length 1.
 #' @export
 
-new_concept_id_exists <-
+conceptIdExists <-
         function(conn,
                  new_concept_id) {
 
@@ -14,6 +14,7 @@ new_concept_id_exists <-
                                  tableName = "concept",
                                  whereInField = "concept_id",
                                  whereInVector = new_concept_id,
+                                 caseInsensitive = FALSE,
                                  n = 1,
                                  n_type = "limit")
 

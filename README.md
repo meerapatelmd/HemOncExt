@@ -20,7 +20,7 @@
         hemOncExt::migrateConceptSynonym(conn = conn,
                                          source_schema = "public")```  
                                  
-3. Apply constraints `constrainHemOncExtSchema(conn = conn)`
+3. Apply constraints `constrainHemOncExtSchema(conn = conn)`: needs to be modified because affects ability to write data to tables 
 4. Recommended Maintenance: every time an update is done to the HemOnc or RxNorm vocabulary the schema should be dropped and refreshed with the updated set. 
 
 ## Creating a NEW Concept  
