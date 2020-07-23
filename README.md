@@ -15,6 +15,7 @@ With the exception of HemOnc Extension Components such as investigational drugs 
 library(devtools)  
 devtools::install_github("patelm9/HemOncExt")
 ```
+
 ## Initial Setup
 1. `createHemOncExtSchema()`: Create a HemOnc Extension (`hemonc_extension`) schema in a database
 2. `ddlHemOncExtSchema()`: Instantiate OMOP Vocabulary Tables in the newly made `hemonc_extension` schema
