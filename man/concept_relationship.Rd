@@ -16,7 +16,7 @@ A data frame with 586 rows and 6 variables:
 }
 }
 \source{
-\url{http://somewhere.important.com/}
+\url{http://athena.ohdsi.org/}
 }
 \usage{
 concept_relationship

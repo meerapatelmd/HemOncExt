@@ -13,7 +13,7 @@ A data frame with 0 rows and 3 variables:
 }
 }
 \source{
-\url{http://somewhere.important.com/}
+\url{http://athena.ohdsi.org/}
 }
 \usage{
 concept_synonym

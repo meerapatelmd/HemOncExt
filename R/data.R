@@ -24,7 +24,7 @@
 #'   \item{\code{concept_synonym_name}}{character Concept Synonyms, also known as Alternative Labels}
 #'   \item{\code{language_concept_id}}{character Language Concept Id}
 #'}
-#' @source \url{http://somewhere.important.com/}
+#' @source \url{http://athena.ohdsi.org/}
 "concept_synonym"
 
 #' @title CONCEPT_RELATIONSHIP
@@ -38,5 +38,5 @@
 #'   \item{\code{valid_end_date}}{character End Date}
 #'   \item{\code{invalid_reason}}{character Reason relationship id is no longer valid}
 #'}
-#' @source \url{http://somewhere.important.com/}
+#' @source \url{http://athena.ohdsi.org/}
 "concept_relationship"
