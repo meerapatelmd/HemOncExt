@@ -40,8 +40,7 @@ Every time an update is made to HemOnc or RxNorm/RxNorm Extension main OMOP voca
 
 ## Details  
 ### Parameters  
-When a Regimen and/or a Component is not represented in the HemOnc proper, the new concept is populated into the CONCEPT table in the hemonc_extension schema with the following parameters:  
-    1. A temporary Concept Id. 
+When a Regimen and/or a Component is not represented in the HemOnc proper, the new concept is populated into the CONCEPT table in the hemonc_extension schema with the following parameters:  1. A temporary Concept Id. 
     1. Concept Name following strict conventions. 
     1. `Drug` domain for new Components and the `Regimen` domain for new Regimens  
     1. `HemOnc Extension` as the Vocabulary Id. 
@@ -53,13 +52,14 @@ When a Regimen and/or a Component is not represented in the HemOnc proper, the n
     1. No Invalid Reason  
    
 Once the new concept, called a new HemOnc Extension concept from this point onwards, is introduced into the HemOnc Extension CONCEPT table, the concept relationships in the Regimen-Component-Ingredient axis of the HemOnc proper ontology are introduced into the CONCEPT_RELATIONSHIP table in the hemonc_extension schema in accordance to the following scenarios:  
-a) New HemOnc Extension Regimen: can be composed of entirely HemOnc proper Components or have at least one new HemOnc Extension Component
+A. New HemOnc Extension Regimen: can be composed of entirely HemOnc proper Components or have at least one new HemOnc Extension Component  
 1. `Has antineoplastic` relationship between HemOnc Extension Regimen and each Component  
 1. `Antineoplastic of` relationship between each Component and HemOnc Extension Regimen  
 1. Valid Start Date as current date  
 1. Valid End Date as 2099-12-31   
 1. No Invalid Reason  
-b) New HemOnc Extension Component  
+
+B. New HemOnc Extension Component  
 1. `Has antineoplastic` relationship between HemOnc Extension Regimen and HemOnc Extension Component  
 1. `Antineoplastic of` relationship between the HemOnc Extension Component and HemOnc Extension Regimen  
 1. _If a corresponding RxNorm/RxNorm Ingredient/Precise Ingedient is present in the OMOP Vocabulary proper_, `Maps to` relationship between the HemOnc Extension Component and the RxNorm/RxNorm Extension Ingredient/Precise Ingredient  
