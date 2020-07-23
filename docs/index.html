@@ -59,44 +59,58 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="hemoncext" class="section level1">
+<div id="hemonc-extension-hemoncext-r-package" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#hemoncext" class="anchor"></a>hemOncExt</h1></div>
+<a href="#hemonc-extension-hemoncext-r-package" class="anchor"></a>HemOnc Extension (HemOncExt R Package)</h1></div>
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
-<ul>
-<li>This package creates NEW oncology drug concepts with the appropriate OMOP relationship with any of the HemOnc, RxNorm Ingredient Concept Class, and/or RxNorm Extension Precise Ingredient Concept Class.</li>
-</ul>
+<p>The HemOncExt, short for HemOnc Extension is an R Package that supports creating new Oncology treatment concepts in the OMOP CDM Vocabulary architecture. This is achieved by creating a separate set of OMOP Vocabulary tables in a <code>hemonc_extension</code> schema in the same database storing the vocabularies and migrating a copy of the HemOnc and RxNorm/RxNorm Extension Ingredient subset of the Athena Vocabularies to this new schema to form the building blocks for new HemOnc relationships.</p>
+<p>When the End User ingests new Regimen and their associated Component concepts into HemOncExt, the new concepts are assigned a temporary unique identifier concept_id along with all the necessary CONCEPT table fields. The appropriate relationship and inverse relationships within HemOnc and amongst HemOnc and RxNorm are recycled from those in the OMOP Vocabulary to ensure a seamless integration of these locally created concepts with the rest of the OMOP Vocabulary.</p>
 </div>
 <div id="requirements" class="section level2">
 <h2 class="hasAnchor">
 <a href="#requirements" class="anchor"></a>Requirements</h2>
 <ol>
-<li>Postgres database that has a schema with Athena vocabulary tables to migrate the HemOnc and RxNorm vocabularies to the extension and will also be the location of the <code>hemonc_extension</code> schema.</li>
+<li>Postgres database with a schema loaded with the OMOP Vocabulary tables</li>
 </ol>
+</div>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
+<pre><code><a href="https://devtools.r-lib.org//reference">library(devtools)  
+devtools::install_github("patelm9/HemOncExt")</a></code></pre>
 </div>
 <div id="initial-setup" class="section level2">
 <h2 class="hasAnchor">
 <a href="#initial-setup" class="anchor"></a>Initial Setup</h2>
 <ol>
-<li><p>Create a HemOnc Extension Schema in a database and instantiate the OMOP Vocabulary Tables <code>createHemOncExtSchema.R</code></p></li>
-<li><p>Instantiate OMOP Vocabulary Tables <code>ddlHemOncExtSchema.R</code></p></li>
-<li><p>Migrate HemOnc Concepts and RxNorm/RxNorm Ingredients and Precise Ingredients to the new HemOnc Extension Schema to create new relationships: <code>hemOncExt::createHemOncExtSchema(conn = conn)      hemOncExt::ddlHemOncExtSchema(conn = conn)      hemOncExt::migrateConcept(conn = conn,                                source_schema = "public")      hemOncExt::migrateConceptAncestor(conn = conn,                                        source_schema = "public")      hemOncExt::migrateConceptRelationship(conn = conn,                                            source_schema = "public")      hemOncExt::migrateConceptSynonym(conn = conn,                                       source_schema = "public")</code></p></li>
-<li><p>Apply constraints <code><a href="reference/constrainHemOncExtSchema.html">constrainHemOncExtSchema(conn = conn)</a></code> is skipped because these tables are staging tables.</p></li>
-<li><p>Recommended Maintenance: every time an update is done to the HemOnc or RxNorm vocabulary the schema should be dropped and refreshed with the updated set.</p></li>
+<li>
+<code><a href="reference/createHemOncExtSchema.html">createHemOncExtSchema()</a></code>: Create a HemOnc Extension (<code>hemonc_extension</code>) schema in a database</li>
+<li>
+<code><a href="reference/ddlHemOncExtSchema.html">ddlHemOncExtSchema()</a></code>: Instantiate OMOP Vocabulary Tables in the newly made <code>hemonc_extension</code> schema</li>
+<li>Migrate HemOnc Concepts and RxNorm/RxNorm Extension Ingredients/Precise Ingredients to the <code>hemonc_extension</code> schema to create new relationships:<br>
+</li>
+</ol>
+<pre><code>                hemOncExt::migrateConcept(conn = conn, source_schema = "public")
+                hemOncExt::migrateConceptAncestor(conn = conn, source_schema = "public")  
+                hemOncExt::migrateConceptRelationship(conn = conn, source_schema = "public")  
+                hemOncExt::migrateConceptSynonym(conn = conn, source_schema = "public")  </code></pre>
+<ol>
+<li>Recommended Maintenance: every time an update is done to the Athena HemOnc or RxNorm vocabulary, this schema should be dropped and the above functions rerun on the newest instance of the vocabulary.</li>
 </ol>
 </div>
-<div id="creating-a-new-concept" class="section level2">
+<div id="notes-on-concept-id-assignment-to-a-new-concept" class="section level2">
 <h2 class="hasAnchor">
-<a href="#creating-a-new-concept" class="anchor"></a>Creating a NEW Concept</h2>
-<p>*NEW Concepts should occur in batches. The in-house concept_id is generated using the getIdentifier function, and is the timestamp in the format “YYYYmmddhhmmss”, with the “202” in the year 2020 removed to be “Ymmddhhmmss”. When converted to integer in the year 2020, timestamps from single digit months (Jan to September) will result in the loss of 2 leading zeros and 1 leading zero in all other cases. For the next decade, this identifier should be unique as long as a identifier assignment has not occurred at overlapping times. The best approach would be to make a single identifier as an anchor and subtracting by 1 incrementally for each NEW Concept. This is advantagous over adding incrementally because it could technically cause collisions should we have 10000 NEW concepts and the concept_ids may overlap with those that are made for another project immediately thereafter.</p>
+<a href="#notes-on-concept-id-assignment-to-a-new-concept" class="anchor"></a>Notes on Concept Id Assignment to a New Concept</h2>
+<p>Each new concept first and foremost needs a unique identifier to which all synonyms or duplicative representations can be normalized to a single id number. The in-house concept_id is generated using the <code>getIdentifier function</code>, and is a string of 10 characters that can be parsed to a timestamp in the format “YYYYmmddHHMMSS”, with the “202” in the year 2020 removed, resuling in “Ymmddhhmmss”. When converted to integer in the year 2020, timestamps from single digit months (Jan to September) will result in the loss of 2 leading zeros and 1 leading zero in all other cases. The best approach would be to make a single identifier as an anchor and subtracting by 1 incrementally for each new Concept. This identifier will be unique with the one caveat that identifier assignment may not occur at overlapping times. This is advantagous over adding incrementally because it could technically cause collisions should we have 10000 NEW concepts and the concept_ids may overlap with those that are made for another project immediately thereafter.</p>
 <div id="steps" class="section level3">
 <h3 class="hasAnchor">
 <a href="#steps" class="anchor"></a>Steps</h3>
-<div id="requirements-dataframe-with-a-single-unique-identifier-new-regimen-any-new-component-and-ingredient-rxnorm-column-representing-the-regimen-component-ingredient-axis-in-the-hemonc-ontology-the-contents-will-be-in-label-format-concept_idnew-concept_name" class="section level4">
+<div id="requirements-1" class="section level4">
 <h4 class="hasAnchor">
-<a href="#requirements-dataframe-with-a-single-unique-identifier-new-regimen-any-new-component-and-ingredient-rxnorm-column-representing-the-regimen-component-ingredient-axis-in-the-hemonc-ontology-the-contents-will-be-in-label-format-concept_idnew-concept_name" class="anchor"></a>Requirements: dataframe with a single unique identifier, NEW Regimen, any NEW Component, and Ingredient (RxNorm) column representing the Regimen-Component-Ingredient Axis in the HemOnc ontology. The contents will be in Label format “{concept_id|NEW} {concept_name}”.</h4>
+<a href="#requirements-1" class="anchor"></a>Requirements:</h4>
+<p>Source dataframe should have a unique identifier at the row level that represents an instance of a HemOnc Regimen along with its Hemonc Components. dataframe with a single unique identifier, NEW Regimen, any NEW Component, and Ingredient (RxNorm) column representing the Regimen-Component-Ingredient Axis in the HemOnc ontology. The contents will be in Label format “{concept_id|NEW} {concept_name}”.</p>
 <ol>
 <li>Quality Rules: 1 Regimen per row, At least 1 Component per Regimen, Each Component has exactly 1 RxNorm Ingredient or RxNorm Precise Ingredient.</li>
 </ol>
