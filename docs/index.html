@@ -69,6 +69,7 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+
 <div id="hemonc-extension-hemoncext-r-package" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#hemonc-extension-hemoncext-r-package" class="anchor"></a>HemOnc Extension (HemOncExt R Package)</h1></div>
@@ -96,13 +97,13 @@ library(HemOncExt)</a></code></pre>
 <a href="#data" class="anchor"></a>Data</h2>
 <p>The latest release of the bundled HemOnc Extension CONCEPT, CONCEPT_RELATIONSHIP, and CONCEPT_SYNONYM tables can be accessed by <code><a href="reference/concept.html">HemOncExt::concept</a></code>, <code><a href="reference/concept_relationship.html">HemOncExt::concept_relationship</a></code>, <code><a href="reference/concept_synonym.html">HemOncExt::concept_synonym</a></code>. Release history can be viewed in the Changelog.</p>
 </div>
-<div id="hemonc-implementation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#hemonc-implementation" class="anchor"></a>HemOnc Implementation</h2>
 </div>
-<div id="benefits" class="section level2">
-<h2 class="hasAnchor">
-<a href="#benefits" class="anchor"></a>Benefits</h2>
+<div id="hemonc-implementation" class="section level1">
+<h1 class="hasAnchor">
+<a href="#hemonc-implementation" class="anchor"></a>HemOnc Implementation</h1>
+<div id="benefits" class="section level3">
+<h3 class="hasAnchor">
+<a href="#benefits" class="anchor"></a>Benefits</h3>
 <ul>
 <li>The output of this process is a HemOnc Extension vocabulary that can seamlessly integrate with the main OMOP Vocabulary while remaining siloed in a separate schema as it awaits further vetting by key stakeholders involved in the HemOnc proper ontology and Athena/OMOP Vocabulary lifecycle.<br>
 </li>
@@ -111,16 +112,16 @@ library(HemOncExt)</a></code></pre>
 <li>With the exception of HemOnc Extension Components such as investigational drugs that do not map to an Ingredient, all HemOnc Extension concepts can be reused once loaded into this schema, allowing all ongoing mappings to be normalized to a temporary Concept Id while it awaits the vetting process.</li>
 </ul>
 </div>
-<div id="requirements" class="section level2">
-<h2 class="hasAnchor">
-<a href="#requirements" class="anchor"></a>Requirements</h2>
+<div id="requirements" class="section level3">
+<h3 class="hasAnchor">
+<a href="#requirements" class="anchor"></a>Requirements</h3>
 <ol>
 <li>Postgres database with a schema loaded with the OMOP Vocabulary tables</li>
 </ol>
 </div>
-<div id="initial-setup" class="section level2">
-<h2 class="hasAnchor">
-<a href="#initial-setup" class="anchor"></a>Initial Setup</h2>
+<div id="initial-setup" class="section level3">
+<h3 class="hasAnchor">
+<a href="#initial-setup" class="anchor"></a>Initial Setup</h3>
 <ol>
 <li>
 <code><a href="reference/createHemOncExtSchema.html">createHemOncExtSchema()</a></code>: Create a HemOnc Extension (<code>hemonc_extension</code>) schema in a database</li>
@@ -133,9 +134,9 @@ library(HemOncExt)</a></code></pre>
                 hemOncExt::migrateConceptAncestor(conn = conn, source_schema = "public")  
                 hemOncExt::migrateConceptRelationship(conn = conn, source_schema = "public")  
                 hemOncExt::migrateConceptSynonym(conn = conn, source_schema = "public")  </code></pre>
-<div id="maintenance" class="section level3">
-<h3 class="hasAnchor">
-<a href="#maintenance" class="anchor"></a>Maintenance</h3>
+<div id="maintenance" class="section level4">
+<h4 class="hasAnchor">
+<a href="#maintenance" class="anchor"></a>Maintenance</h4>
 <p>Every time an update is made to HemOnc or RxNorm/RxNorm Extension main OMOP vocabulary, the <code>hemonc_extension</code> schema should be dropped and the above functions rerun on the newest instance of the vocabulary.</p>
 </div>
 </div>
@@ -245,6 +246,7 @@ The following data quality rules on the source dataframe and failure to meet the
 </div>
 </div>
 </div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
