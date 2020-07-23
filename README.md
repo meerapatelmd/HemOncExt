@@ -70,16 +70,16 @@ B. New HemOnc Extension Component
 1. `Has antineoplastic` relationship between HemOnc Extension Regimen and HemOnc Extension Component  
 1. No Invalid Reason  
   
-### Notes on Temporary Concept Id Assignment    
+## Notes on Temporary Concept Id Assignment    
 Prior to being loaded into the HemOnc Extension CONCEPT table, every new concept requires a unique identifier, a temporary Concept Id, to which all synonyms or duplicative representations can be normalized to. The temporary Concept Id is generated using the `getIdentifier()` function found in this package, which takes all the digits in the timestamp returned by the base `Sys.time()` as a string, removes the starting digits "202" from the year value "2020", and converts the string to an integer. Therefore, a the native base timestamp that returns as "YYYY-mm-dd HH:MM:SS" is converted to a character string in the format of "YYYYmmddHHMMSS", truncated to "Ymmddhhmmss" by removing "202", and converted to the integer class to match the DDL of all concept_ids in the OMOP CDM proper.  
 
-## Why?  
+### Why?  
 This was a quick fix to the identifier generation issue I was faced with when figuring out how to manage the new concepts. I always defer to timestamps since a timestamp conceptually represents a unique value that has never occurred before. However, simply using all the digits in a timestamp as "YYYYmmddHHMMSS" and converting it to an integer to align with the OMOP CDM proper DDL of all Concept Ids is not straightforward because "YYYYmmddHHMMSS" represents a value too large for base R to process. Packages such as the gmp R package, allows for the integer representation of "YYYYmmddHHMMSS", but involves assigning a separate data class `bigz` that does not align with the integer data type in the OMOP CDM. Therefore, for the 2020-2029 time period, I began truncating the string version of a timestamp by removing the starting "202" digits of the year "2020", still rendering a unique identifier as long as all the identifiers generated in this project will be made in this decade.  
 
-## Approach and Major Caveats  
+### Approach and Major Caveats  
 The best approach to use generate an identifier as described is to process new concepts into the HemOnc Extension schema in batches. For each batch, the `getIdentifier()` function is called once, returning a single integer value that serves as an anchor point from which a vector of new identifiers can be made by adding or subtracting the integer vector of 1 to the number of new concepts in that batch. Subtracting the vector is preferred over adding because the assumption made in this operation is that each of these identifiers occurred at a moment of time in the past or the future. For example if 5000 unique identifiers were made at midnight on January 01, 2020 and a second batch of 5000 additional unique identifiers are made 30 at 1:00 am, the integers generated in the 2 batches may not be unique.  
 
-## Minor Caveats  
+### Minor Caveats  
 For the year 2020 and as well as any case of a single digit month regardless of year, leading zeros are removed once the string is converted to an integer. For example, an original timestamp of 2020-07-23 13:41:31 EDT, rendered as a string "20200723134131", truncated to "00723134131", and when converted to an integer, the leading zeros are lost and the final value returned is 723134106. Though this is still a unique identifier in these circumstances, it is important to note that under some conditions, the leading zeros may need to padded back, such as would be the case if one were interested in ever parsing the timestamp from the identifier (thought this may not always work since time and integer are 2 completely different representations).  
 
 ## SECTIONS IN DEVELOPMENT
