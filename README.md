@@ -82,7 +82,8 @@ The best approach to use generate an identifier as described is to process new c
 ## Minor Caveats  
 For the year 2020 and as well as any case of a single digit month regardless of year, leading zeros are removed once the string is converted to an integer. For example, an original timestamp of 2020-07-23 13:41:31 EDT, rendered as a string "20200723134131", truncated to "00723134131", and when converted to an integer, the leading zeros are lost and the final value returned is 723134106. Though this is still a unique identifier in these circumstances, it is important to note that under some conditions, the leading zeros may need to padded back, such as would be the case if one were interested in ever parsing the timestamp from the identifier (thought this may not always work since time and integer are 2 completely different representations).  
 
-### Steps (*In Process*) 
+## SECTIONS IN DEVELOPMENT
+### Steps 
 #### Input Requirements: 
 Source dataframe should have a unique identifier at the row level that represents an instance of a new Regimen along with its new and HemOnc proper Components, with the values represented in a Label format "{concept_id|NEW} {concept_name}".  
 The following data quality rules on the source dataframe and failure to meet these benchmarks will return an error and further processing will stop.  
