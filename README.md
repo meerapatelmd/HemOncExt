@@ -16,12 +16,12 @@ devtools::install_github("patelm9/HemOncExt")
 1. `createHemOncExtSchema()`: Create a HemOnc Extension (`hemonc_extension`) schema in a database
 2. `ddlHemOncExtSchema()`: Instantiate OMOP Vocabulary Tables in the newly made `hemonc_extension` schema
 3. Migrate HemOnc Concepts and RxNorm/RxNorm Extension Ingredients/Precise Ingredients to the `hemonc_extension` schema to create new relationships:  
-        ```
-        hemOncExt::migrateConcept(conn = conn, source_schema = "public")
-        hemOncExt::migrateConceptAncestor(conn = conn, source_schema = "public")  
-        hemOncExt::migrateConceptRelationship(conn = conn, source_schema = "public")  
-        hemOncExt::migrateConceptSynonym(conn = conn, source_schema = "public")  
-        ```
+```
+                hemOncExt::migrateConcept(conn = conn, source_schema = "public")
+                hemOncExt::migrateConceptAncestor(conn = conn, source_schema = "public")  
+                hemOncExt::migrateConceptRelationship(conn = conn, source_schema = "public")  
+                hemOncExt::migrateConceptSynonym(conn = conn, source_schema = "public")  
+```
 4. Recommended Maintenance: every time an update is done to the Athena HemOnc or RxNorm vocabulary, this schema should be dropped and the above functions rerun on the newest instance of the vocabulary.  
   
 ## Notes on Concept Id Assignment to a New Concept  
