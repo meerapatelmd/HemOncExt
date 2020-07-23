@@ -5,6 +5,13 @@
 # component_col_name <- "CurrentComponent"
 # ingredient_col_name <- NULL
 #
+# input2 <-
+# configureInput(.input = input,
+#                id_col_name = id_col_name,
+#                regimen_col_name = regimen_col_name,
+#                component_col_name = component_col_name,
+#                ingredient_col_name = ingredient_col_name)
+#
 # # Getting Input in Correct Format
 # # If ingredient_col_name is NULL, it will be made, but first the QA Rules need to be applied
 # if (is.null(ingredient_col_name)) {
