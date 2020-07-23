@@ -41,6 +41,7 @@ Every time an update is made to HemOnc or RxNorm/RxNorm Extension main OMOP voca
 ## Details  
 ### Parameters  
 When a Regimen and/or a Component is not represented in the HemOnc proper, the new concept is populated into the CONCEPT table in the hemonc_extension schema with the following parameters:  
+
 1. A temporary Concept Id  
 1. Concept Name following strict conventions  
 1. `Drug` domain for new Components and the `Regimen` domain for new Regimens  
