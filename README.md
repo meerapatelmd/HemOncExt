@@ -40,16 +40,17 @@ Every time an update is made to HemOnc or RxNorm/RxNorm Extension main OMOP voca
 
 ## Details  
 ### Parameters  
-When a Regimen and/or a Component is not represented in the HemOnc proper, the new concept is populated into the CONCEPT table in the hemonc_extension schema with the following parameters:  1. A temporary Concept Id. 
-    1. Concept Name following strict conventions. 
-    1. `Drug` domain for new Components and the `Regimen` domain for new Regimens  
-    1. `HemOnc Extension` as the Vocabulary Id. 
-    1. `Component` concept class for new Component and `Regimen` concept class for new Regimen. 
-    1. `Non-Standard` concept type  
-    1. Concept Code of 0  
-    1. Valid Start Date as System Date  
-    1. Valid End Date as 2099-12-31  
-    1. No Invalid Reason  
+When a Regimen and/or a Component is not represented in the HemOnc proper, the new concept is populated into the CONCEPT table in the hemonc_extension schema with the following parameters:  
+1. A temporary Concept Id  
+1. Concept Name following strict conventions  
+1. `Drug` domain for new Components and the `Regimen` domain for new Regimens  
+1. `HemOnc Extension` as the Vocabulary Id  
+1. `Component` concept class for new Component and `Regimen` concept class for new Regimen  
+1. `Non-Standard` concept type  
+1. Concept Code of 0  
+1. Valid Start Date as System Date  
+1. Valid End Date as 2099-12-31  
+1. No Invalid Reason  
    
 Once the new concept, called a new HemOnc Extension concept from this point onwards, is introduced into the HemOnc Extension CONCEPT table, the concept relationships in the Regimen-Component-Ingredient axis of the HemOnc proper ontology are introduced into the CONCEPT_RELATIONSHIP table in the hemonc_extension schema in accordance to the following scenarios:  
 A. New HemOnc Extension Regimen: can be composed of entirely HemOnc proper Components or have at least one new HemOnc Extension Component  
