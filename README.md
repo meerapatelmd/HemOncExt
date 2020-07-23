@@ -16,7 +16,7 @@ library(devtools)
 devtools::install_github("patelm9/HemOncExt")
 ```
 
-## Initial Setup
+## Initial Setup  
 1. `createHemOncExtSchema()`: Create a HemOnc Extension (`hemonc_extension`) schema in a database
 2. `ddlHemOncExtSchema()`: Instantiate OMOP Vocabulary Tables in the newly made `hemonc_extension` schema
 3. Migrate HemOnc Concepts and RxNorm/RxNorm Extension Ingredients/Precise Ingredients to the `hemonc_extension` schema to create new relationships:  
@@ -26,10 +26,12 @@ devtools::install_github("patelm9/HemOncExt")
                 hemOncExt::migrateConceptRelationship(conn = conn, source_schema = "public")  
                 hemOncExt::migrateConceptSynonym(conn = conn, source_schema = "public")  
 ```
-4. Recommended Maintenance: every time an update is done to the Athena HemOnc or RxNorm vocabulary, the `hemonc_extension` schema should be dropped and the above functions rerun on the newest instance of the vocabulary.  
+### Maintenance  
+Every time an update is made to HemOnc or RxNorm/RxNorm Extension main OMOP vocabulary, the `hemonc_extension` schema should be dropped and the above functions rerun on the newest instance of the vocabulary.  
 
-## Set Parameters  
-When a Regimen and/or a Component is not represented in the HemOnc proper, the new concept is populated into the CONCEPT table in the hemonc_extension schema with the following: 
+## Details  
+### Parameters  
+When a Regimen and/or a Component is not represented in the HemOnc proper, the new concept is populated into the CONCEPT table in the hemonc_extension schema with the following parameters: 
     1. A temporary Concept Id
     2. Concept Name following strict conventions
     3. `Drug` domain for new Components and the `Regimen` domain for new Regimens  
@@ -56,8 +58,16 @@ b) New HemOnc Extension Component
     1. Valid End Date as 2099-12-31  
     1. No Invalid Reason  
   
-## Notes on Concept Id Assignment to a New Concept  
-Each new concept first and foremost needs a unique identifier to which all synonyms or duplicative representations can be normalized to. The in-house concept_id is generated using the `getIdentifier function`, and is a string of 10 characters that can be parsed to a timestamp in the format "YYYYmmddHHMMSS", with the "202" in the year 2020 removed, resuling in "Ymmddhhmmss". When converted to integer in the year 2020, timestamps from single digit months (Jan to September) will result in the loss of 2 leading zeros and 1 leading zero in all other cases. The best approach would be to make a single identifier as an anchor and subtracting by 1 incrementally for each new Concept. This identifier will be unique with the one caveat that identifier assignment may not occur at overlapping times. This is advantagous over adding incrementally because it could technically cause collisions should we have 10000 NEW concepts and the concept_ids may overlap with those that are made for another project immediately thereafter. 
+### Notes on Temporary Concept Id Assignment    
+Prior to being loaded into the HemOnc Extension CONCEPT table, every new concept requires a unique identifier, a temporary Concept Id, to which all synonyms or duplicative representations can be normalized to. The temporary Concept Id is generated using the `getIdentifier()` function found in this package, which takes all the digits in the timestamp returned by the base `Sys.time()` as a string, removes the starting digits "202" from the year value "2020", and converts the string to an integer. Therefore, a the native base timestamp that returns as "YYYY-mm-dd HH:MM:SS" is converted to a character string in the format of "YYYYmmddHHMMSS", truncated to "Ymmddhhmmss" by removing "202", and converted to the integer class to match the DDL of all concept_ids in the OMOP CDM proper.  
+## Why?  
+This was a quick fix to the identifier generation issue I was faced with when figuring out how to manage the new concepts. I always defer to timestamps since a timestamp conceptually represents a unique value that has never occurred before. However, simply using all the digits in a timestamp as "YYYYmmddHHMMSS" and converting it to an integer to align with the OMOP CDM proper DDL of all Concept Ids is not straightforward because "YYYYmmddHHMMSS" represents a value too large for base R to process. Packages such as the gmp R package, allows for the integer representation of "YYYYmmddHHMMSS", but involves assigning a separate data class `bigz` that does not align with the integer data type in the OMOP CDM. Therefore, for the 2020-2029 time period, I began truncating the string version of a timestamp by removing the starting "202" digits of the year "2020", still rendering a unique identifier as long as all the identifiers generated in this project will be made in this decade.  
+
+## Minor Caveats  
+For the year 2020 and as well as any case of a single digit month regardless of year, leading zeros are removed once the string is converted to an integer. For example, an original timestamp of 2020-07-23 13:41:31 EDT, rendered as a string "20200723134131", truncated to "00723134131", and when converted to an integer, the leading zeros are lost and the final value returned is 723134106. Though this is still a unique identifier in these circumstances, it is important to note that under some conditions, the leading zeros may need to padded back, such as would be the case if one were interested in ever parsing the timestamp from the identifier (thought this may not always work since time and integer are 2 completely different representations).  
+
+## Approach and Major Caveats  
+The best approach to use generate an identifier as described  is to call it once, returning a single integer value that serves as an anchor point from which a vector of new identifiers can be made by adding or subtracting the integer vector of 1 to the number of new concepts. Subtracting the vector is preferred over adding because the assumption made in this operation is that each of these identifiers occurred at a moment of time in the past or the future. For example if 5000 unique identifiers were made at midnight on January 01, 2020 and a second batch of 5000 additional unique identifiers are made 30 at 1:00 am, the integers generated in the 2 batches may not be unique.  
   
 ### Steps  
 #### Requirements: 
