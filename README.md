@@ -1,9 +1,21 @@
 # HemOnc Extension (HemOncExt R Package) 
 ## Overview  
-The HemOncExt, short for HemOnc Extension is an R Package that supports creating new Oncology treatment concepts that follows the conventions of the OMOP CDM Vocabulary architecture. This is achieved by creating a separate set of OMOP Vocabulary tables in a `hemonc_extension` schema in the same Postgres database storing the main OMOP vocabularies. Initial setup involves migrating a copy of all of the HemOnc concepts and the Ingredient/Precise Ingredient subset of the RxNorm/RxNorm Extension concepts from the main OMOP Vocabularies into this new schema to serve as building blocks for any new Regimens and Components that will be created.  
+The HemOncExt, short for HemOnc Extension is an R Package serves 2 purposes:  
+1. Data:  
+Access to the latest release of new Regimen and Component concepts following the conventions of the HemOnc ontology in the same format as the OMOP CDM Vocabulary CONCEPT, CONCEPT_RELATIONSHIP, and CONCEPT_SYNONYM tables for distribution as dataframes.  
+1. Implementation:  
+Create new Oncology treatment concepts that follows the conventions of the OMOP CDM Vocabulary architecture. This is achieved by creating a separate set of OMOP Vocabulary tables in a `hemonc_extension` schema in the same Postgres database storing the main OMOP vocabularies. Initial setup involves migrating a copy of all of the HemOnc concepts and the Ingredient/Precise Ingredient subset of the RxNorm/RxNorm Extension concepts from the main OMOP Vocabularies into this new schema to serve as building blocks for any new Regimens and Components that will be created.  
 
-Bundled in this package are also the latest release of the CONCEPT, CONCEPT_RELATIONSHIP, and CONCEPT_SYNONYM tables from the HemOnc Extension schema for a variety of other use cases.  
+## Installation  
+```
+library(devtools)  
+devtools::install_github("patelm9/HemOncExt")
+```  
 
+## Data  
+For users solely interested in accessing the bundled HemOnc Extension CONCEPT, CONCEPT_RELATIONSHIP, and CONCEPT_SYNONYM tables, 
+
+## HemOnc Implementation  
 ## Benefits  
 The output of this process is a HemOnc Extension vocabulary that can seamlessly integrate with the main OMOP Vocabulary while remaining siloed in a separate schema as it awaits further vetting by key stakeholders involved in the HemOnc proper ontology and Athena/OMOP Vocabulary lifecycle.  
 The same functions in R packages that support standardization processes such as the Chariot R Package (https://patelm9.github.io/chariot/) can be used on these tables by setting the `schema` argument to `hemonc_extension`.  
@@ -11,12 +23,6 @@ With the exception of HemOnc Extension Components such as investigational drugs 
 
 ## Requirements  
 1. Postgres database with a schema loaded with the OMOP Vocabulary tables  
-
-## Installation  
-```
-library(devtools)  
-devtools::install_github("patelm9/HemOncExt")
-```
 
 ## Initial Setup  
 1. `createHemOncExtSchema()`: Create a HemOnc Extension (`hemonc_extension`) schema in a database
