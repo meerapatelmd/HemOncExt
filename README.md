@@ -1,9 +1,11 @@
-# hemOncExt  
+# HemOncExt   
 ## Overview  
-* This package creates NEW oncology drug concepts with the appropriate OMOP relationship with any of the HemOnc, RxNorm Ingredient Concept Class, and/or RxNorm Extension Precise Ingredient Concept Class. 
+The HemOncExt, short for HemOnc Extension is an R Package that supports creating new Oncology treatment concepts in the OMOP CDM Vocabulary architecture. This is achieved by creating a separate set of OMOP Vocabulary tables in a `hemonc_extension` schema in the same database storing the vocabularies and migrating a copy of the HemOnc and RxNorm/RxNorm Extension Ingredient subset of the Athena Vocabularies to this new schema to form the building blocks for new HemOnc relationships. 
+
+When the End User ingests new Regimen and their associated Component concepts into HemOncExt, the new concepts are assigned a temporary unique identifier concept_id along with all the necessary CONCEPT table fields. The appropriate relationship and inverse relationships within HemOnc and amongst HemOnc and RxNorm are recycled from those in the OMOP Vocabulary to ensure a seamless integration of these locally created concepts with the rest of the OMOP Vocabulary. 
 
 ## Requirements  
-1. Postgres database that has a schema with Athena vocabulary tables to migrate the HemOnc and RxNorm vocabularies to the extension and will also be the location of the `hemonc_extension` schema.  
+1. Postgres database with a schema loaded with the OMOP Vocabulary tables to migrate the HemOnc and RxNorm vocabularies to the extension and will also be the location of the `hemonc_extension` schema.  
   
 ## Initial Setup
 1. Create a HemOnc Extension Schema in a database and instantiate the OMOP Vocabulary Tables `createHemOncExtSchema.R`
