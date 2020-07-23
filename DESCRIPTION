@@ -5,6 +5,8 @@ Version: 0.1.0
 Author: Meera Y. Patel, MD <patelmeeray@gmail.com>
 Maintainer: Meera Y. Patel, MD <patelmeeray@gmail.com>
 Description: This package creates and maintains Oncology treatment concepts in the HemOnc ontology.
+URL: https://github.com/patelm9/HemOncExt, https://patelm9.github.io/HemOncExt/ 
+BugReports: https://github.com/patelm9/HemOncExt/issues 
 License: Apache License 2.0
 Encoding: UTF-8
 LazyData: true
