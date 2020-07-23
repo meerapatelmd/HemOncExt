@@ -5,16 +5,23 @@ The HemOncExt, short for HemOnc Extension is an R Package that supports creating
 When the End User ingests new Regimen and their associated Component concepts into HemOncExt, the new concepts are assigned a temporary unique identifier concept_id along with all the necessary CONCEPT table fields. The appropriate relationship and inverse relationships within HemOnc and amongst HemOnc and RxNorm are recycled from those in the OMOP Vocabulary to ensure a seamless integration of these locally created concepts with the rest of the OMOP Vocabulary. 
 
 ## Requirements  
-1. Postgres database with a schema loaded with the OMOP Vocabulary tables 
-  
+1. Postgres database with a schema loaded with the OMOP Vocabulary tables  
+
+## Installation  
+```
+library(devtools)  
+devtools::install_github("patelm9/HemOncExt")
+```
 ## Initial Setup
 1. `createHemOncExtSchema()`: Create a HemOnc Extension (`hemonc_extension`) schema in a database
 2. `ddlHemOncExtSchema()`: Instantiate OMOP Vocabulary Tables in the newly made `hemonc_extension` schema
 3. Migrate HemOnc Concepts and RxNorm/RxNorm Extension Ingredients/Precise Ingredients to the `hemonc_extension` schema to create new relationships:  
-        `hemOncExt::migrateConcept(conn = conn, source_schema = "public")`  
-        `hemOncExt::migrateConceptAncestor(conn = conn, source_schema = "public")`  
-        `hemOncExt::migrateConceptRelationship(conn = conn, source_schema = "public")`  
-        `hemOncExt::migrateConceptSynonym(conn = conn, source_schema = "public")`          
+        ```
+        hemOncExt::migrateConcept(conn = conn, source_schema = "public")
+        hemOncExt::migrateConceptAncestor(conn = conn, source_schema = "public")  
+        hemOncExt::migrateConceptRelationship(conn = conn, source_schema = "public")  
+        hemOncExt::migrateConceptSynonym(conn = conn, source_schema = "public")  
+        ```
 4. Recommended Maintenance: every time an update is done to the Athena HemOnc or RxNorm vocabulary, this schema should be dropped and the above functions rerun on the newest instance of the vocabulary.  
   
 ## Notes on Concept Id Assignment to a New Concept  
