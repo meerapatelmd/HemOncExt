@@ -1,8 +1,13 @@
 # HemOnc Extension (HemOncExt R Package) 
 ## Overview  
-The HemOncExt, short for HemOnc Extension is an R Package that supports creating new Oncology treatment concepts in the OMOP CDM Vocabulary architecture. This is achieved by creating a separate set of OMOP Vocabulary tables in a `hemonc_extension` schema in the same Postgres database storing the main OMOP vocabularies. Initial setup also involves migrating a copy of all of the HemOnc concepts and the Ingredient/Precise Ingredient subset of the RxNorm/RxNorm Extension concepts from the main OMOP Vocabularies into this new schema to serve as building blocks for any new Regimens and Components that will be created.  
+The HemOncExt, short for HemOnc Extension is an R Package that supports creating new Oncology treatment concepts that follows the conventions of the OMOP CDM Vocabulary architecture. This is achieved by creating a separate set of OMOP Vocabulary tables in a `hemonc_extension` schema in the same Postgres database storing the main OMOP vocabularies. Initial setup involves migrating a copy of all of the HemOnc concepts and the Ingredient/Precise Ingredient subset of the RxNorm/RxNorm Extension concepts from the main OMOP Vocabularies into this new schema to serve as building blocks for any new Regimens and Components that will be created. 
 
-When a Regimen and/or a Component is not represented in the HemOnc proper, the new concept is populated into the hemonc_extension.concept table with the following: 
+## Benefits  
+The output of this process is a HemOnc Extension vocabulary that can seamlessly integrate with the main OMOP Vocabulary while remaining siloed in a separate schema as it awaits further vetting by key stakeholders involved in the HemOnc proper ontology and Athena/OMOP Vocabulary lifecycle.  
+The same functions in R packages that support standardization processes such as the Chariot R Package (https://patelm9.github.io/chariot/) can be used on these tables by setting the `schema` argument to `hemonc_extension`.  
+With the exception of HemOnc Extension Components such as investigational drugs that do not map to an Ingredient, all HemOnc Extension concepts can be reused once loaded into this schema, allowing all ongoing mappings to be normalized to a temporary Concept Id while it awaits the vetting process.   
+
+When a Regimen and/or a Component is not represented in the HemOnc proper, the new concept is populated into the CONCEPT table in the hemonc_extension schema with the following: 
     1. A temporary Concept Id
     2. Concept Name following strict conventions
     3. `Drug` domain for new Components and the `Regimen` domain for new Regimens  
@@ -13,6 +18,23 @@ When a Regimen and/or a Component is not represented in the HemOnc proper, the n
     8. Valid Start Date as System Date  
     9. Valid End Date as 2099-12-31
     10. No Invalid Reason  
+    
+Once the new concept, called a new HemOnc Extension concept from this point onwards, is introduced into the HemOnc Extension CONCEPT table, the concept relationships in the Regimen-Component-Ingredient axis of the HemOnc proper ontology are introduced into the CONCEPT_RELATIONSHIP table in the hemonc_extension schema in accordance to the following scenarios:  
+a) New HemOnc Extension Regimen: can be composed of entirely HemOnc proper Components or have at least one new HemOnc Extension Component
+    1. `Has antineoplastic` relationship between HemOnc Extension Regimen and each Component 
+    1. `Antineoplastic of` relationship between each Component and HemOnc Extension Regimen  
+    1. Valid Start Date as current date  
+    1. Valid End Date as 2099-12-31  
+    1. No Invalid Reason  
+b) New HemOnc Extension Component  
+    1. `Has antineoplastic` relationship between HemOnc Extension Regimen and HemOnc Extension Component 
+    1. `Antineoplastic of` relationship between the HemOnc Extension Component and HemOnc Extension Regimen  
+    1. _If a corresponding RxNorm/RxNorm Ingredient/Precise Ingedient is present in the OMOP Vocabulary proper_, `Maps to` relationship between the HemOnc Extension Component and the RxNorm/RxNorm Extension Ingredient/Precise Ingredient  
+    1. Valid Start Date as current date
+    1. Valid End Date as 2099-12-31  
+    1. No Invalid Reason  
+
+
     
 
 When the End User ingests new Regimen and their associated Component concepts into HemOncExt, the new concepts are assigned a temporary unique Concept Id along with all the necessary CONCEPT table fields. The appropriate relationship and inverse relationships within HemOnc and amongst HemOnc and RxNorm are recycled from those in the OMOP Vocabulary to ensure a seamless integration of these locally created concepts with the the main OMOP Vocabulary.
