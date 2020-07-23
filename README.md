@@ -40,32 +40,33 @@ Every time an update is made to HemOnc or RxNorm/RxNorm Extension main OMOP voca
 
 ## Details  
 ### Parameters  
-When a Regimen and/or a Component is not represented in the HemOnc proper, the new concept is populated into the CONCEPT table in the hemonc_extension schema with the following parameters: 
-    1. A temporary Concept Id
-    2. Concept Name following strict conventions
-    3. `Drug` domain for new Components and the `Regimen` domain for new Regimens  
-    4. `HemOnc Extension` as the Vocabulary Id
-    5. `Component` concept class for new Component and `Regimen` concept class for new Regimen
-    6. `Non-Standard` concept type
-    7. Concept Code of 0  
-    8. Valid Start Date as System Date  
-    9. Valid End Date as 2099-12-31
-    10. No Invalid Reason  
-    
+When a Regimen and/or a Component is not represented in the HemOnc proper, the new concept is populated into the CONCEPT table in the hemonc_extension schema with the following parameters:  
+    1. A temporary Concept Id. 
+    1. Concept Name following strict conventions. 
+    1. `Drug` domain for new Components and the `Regimen` domain for new Regimens  
+    1. `HemOnc Extension` as the Vocabulary Id. 
+    1. `Component` concept class for new Component and `Regimen` concept class for new Regimen. 
+    1. `Non-Standard` concept type  
+    1. Concept Code of 0  
+    1. Valid Start Date as System Date  
+    1. Valid End Date as 2099-12-31  
+    1. No Invalid Reason  
+   
 Once the new concept, called a new HemOnc Extension concept from this point onwards, is introduced into the HemOnc Extension CONCEPT table, the concept relationships in the Regimen-Component-Ingredient axis of the HemOnc proper ontology are introduced into the CONCEPT_RELATIONSHIP table in the hemonc_extension schema in accordance to the following scenarios:  
 a) New HemOnc Extension Regimen: can be composed of entirely HemOnc proper Components or have at least one new HemOnc Extension Component
-    1. `Has antineoplastic` relationship between HemOnc Extension Regimen and each Component 
-    1. `Antineoplastic of` relationship between each Component and HemOnc Extension Regimen  
-    1. Valid Start Date as current date  
-    1. Valid End Date as 2099-12-31  
-    1. No Invalid Reason  
+1. `Has antineoplastic` relationship between HemOnc Extension Regimen and each Component  
+1. `Antineoplastic of` relationship between each Component and HemOnc Extension Regimen  
+1. Valid Start Date as current date  
+1. Valid End Date as 2099-12-31   
+1. No Invalid Reason  
 b) New HemOnc Extension Component  
-    1. `Has antineoplastic` relationship between HemOnc Extension Regimen and HemOnc Extension Component 
-    1. `Antineoplastic of` relationship between the HemOnc Extension Component and HemOnc Extension Regimen  
-    1. _If a corresponding RxNorm/RxNorm Ingredient/Precise Ingedient is present in the OMOP Vocabulary proper_, `Maps to` relationship between the HemOnc Extension Component and the RxNorm/RxNorm Extension Ingredient/Precise Ingredient  
-    1. Valid Start Date as current date
-    1. Valid End Date as 2099-12-31  
-    1. No Invalid Reason  
+1. `Has antineoplastic` relationship between HemOnc Extension Regimen and HemOnc Extension Component  
+1. `Antineoplastic of` relationship between the HemOnc Extension Component and HemOnc Extension Regimen  
+1. _If a corresponding RxNorm/RxNorm Ingredient/Precise Ingedient is present in the OMOP Vocabulary proper_, `Maps to` relationship between the HemOnc Extension Component and the RxNorm/RxNorm Extension Ingredient/Precise Ingredient  
+1. Valid Start Date as current date 
+1. Valid End Date as 2099-12-31  
+1. `Has antineoplastic` relationship between HemOnc Extension Regimen and HemOnc Extension Component  
+1. No Invalid Reason  
   
 ### Notes on Temporary Concept Id Assignment    
 Prior to being loaded into the HemOnc Extension CONCEPT table, every new concept requires a unique identifier, a temporary Concept Id, to which all synonyms or duplicative representations can be normalized to. The temporary Concept Id is generated using the `getIdentifier()` function found in this package, which takes all the digits in the timestamp returned by the base `Sys.time()` as a string, removes the starting digits "202" from the year value "2020", and converts the string to an integer. Therefore, a the native base timestamp that returns as "YYYY-mm-dd HH:MM:SS" is converted to a character string in the format of "YYYYmmddHHMMSS", truncated to "Ymmddhhmmss" by removing "202", and converted to the integer class to match the DDL of all concept_ids in the OMOP CDM proper.  
