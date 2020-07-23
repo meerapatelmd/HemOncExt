@@ -12,24 +12,7 @@
 #                component_col_name = component_col_name,
 #                ingredient_col_name = ingredient_col_name)
 #
-# # Getting Input in Correct Format
-# # If ingredient_col_name is NULL, it will be made, but first the QA Rules need to be applied
-# if (is.null(ingredient_col_name)) {
-#
-#         input2 <-
-#                 input %>%
-#                 dplyr::select(ID = !!id_col_name,
-#                               Regimen = !!regimen_col_name,
-#                               Component = !!component_col_name)
-# } else {
-#
-#         input2 <-
-#                 input %>%
-#                 dplyr::select(ID = !!id_col_name,
-#                               Regimen = !!regimen_col_name,
-#                               Component = !!component_col_name,
-#                               Ingredient = !!ingredient_col_name)
-# }
+
 #
 # # Separating all columns except Identifier for carriage returns
 # input3 <-
