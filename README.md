@@ -5,8 +5,29 @@ The HemOncExt, short for HemOnc Extension is an R Package that supports creating
 ## Benefits  
 The output of this process is a HemOnc Extension vocabulary that can seamlessly integrate with the main OMOP Vocabulary while remaining siloed in a separate schema as it awaits further vetting by key stakeholders involved in the HemOnc proper ontology and Athena/OMOP Vocabulary lifecycle.  
 The same functions in R packages that support standardization processes such as the Chariot R Package (https://patelm9.github.io/chariot/) can be used on these tables by setting the `schema` argument to `hemonc_extension`.  
-With the exception of HemOnc Extension Components such as investigational drugs that do not map to an Ingredient, all HemOnc Extension concepts can be reused once loaded into this schema, allowing all ongoing mappings to be normalized to a temporary Concept Id while it awaits the vetting process.   
+With the exception of HemOnc Extension Components such as investigational drugs that do not map to an Ingredient, all HemOnc Extension concepts can be reused once loaded into this schema, allowing all ongoing mappings to be normalized to a temporary Concept Id while it awaits the vetting process.  
 
+## Requirements  
+1. Postgres database with a schema loaded with the OMOP Vocabulary tables  
+
+## Installation  
+```
+library(devtools)  
+devtools::install_github("patelm9/HemOncExt")
+```
+## Initial Setup
+1. `createHemOncExtSchema()`: Create a HemOnc Extension (`hemonc_extension`) schema in a database
+2. `ddlHemOncExtSchema()`: Instantiate OMOP Vocabulary Tables in the newly made `hemonc_extension` schema
+3. Migrate HemOnc Concepts and RxNorm/RxNorm Extension Ingredients/Precise Ingredients to the `hemonc_extension` schema to create new relationships:  
+```
+                hemOncExt::migrateConcept(conn = conn, source_schema = "public")
+                hemOncExt::migrateConceptAncestor(conn = conn, source_schema = "public")  
+                hemOncExt::migrateConceptRelationship(conn = conn, source_schema = "public")  
+                hemOncExt::migrateConceptSynonym(conn = conn, source_schema = "public")  
+```
+4. Recommended Maintenance: every time an update is done to the Athena HemOnc or RxNorm vocabulary, the `hemonc_extension` schema should be dropped and the above functions rerun on the newest instance of the vocabulary.  
+
+## Set Parameters  
 When a Regimen and/or a Component is not represented in the HemOnc proper, the new concept is populated into the CONCEPT table in the hemonc_extension schema with the following: 
     1. A temporary Concept Id
     2. Concept Name following strict conventions
@@ -33,31 +54,6 @@ b) New HemOnc Extension Component
     1. Valid Start Date as current date
     1. Valid End Date as 2099-12-31  
     1. No Invalid Reason  
-
-
-    
-
-When the End User ingests new Regimen and their associated Component concepts into HemOncExt, the new concepts are assigned a temporary unique Concept Id along with all the necessary CONCEPT table fields. The appropriate relationship and inverse relationships within HemOnc and amongst HemOnc and RxNorm are recycled from those in the OMOP Vocabulary to ensure a seamless integration of these locally created concepts with the the main OMOP Vocabulary.
-
-## Requirements  
-1. Postgres database with a schema loaded with the OMOP Vocabulary tables  
-
-## Installation  
-```
-library(devtools)  
-devtools::install_github("patelm9/HemOncExt")
-```
-## Initial Setup
-1. `createHemOncExtSchema()`: Create a HemOnc Extension (`hemonc_extension`) schema in a database
-2. `ddlHemOncExtSchema()`: Instantiate OMOP Vocabulary Tables in the newly made `hemonc_extension` schema
-3. Migrate HemOnc Concepts and RxNorm/RxNorm Extension Ingredients/Precise Ingredients to the `hemonc_extension` schema to create new relationships:  
-```
-                hemOncExt::migrateConcept(conn = conn, source_schema = "public")
-                hemOncExt::migrateConceptAncestor(conn = conn, source_schema = "public")  
-                hemOncExt::migrateConceptRelationship(conn = conn, source_schema = "public")  
-                hemOncExt::migrateConceptSynonym(conn = conn, source_schema = "public")  
-```
-4. Recommended Maintenance: every time an update is done to the Athena HemOnc or RxNorm vocabulary, the `hemonc_extension` schema should be dropped and the above functions rerun on the newest instance of the vocabulary.  
   
 ## Notes on Concept Id Assignment to a New Concept  
 Each new concept first and foremost needs a unique identifier to which all synonyms or duplicative representations can be normalized to. The in-house concept_id is generated using the `getIdentifier function`, and is a string of 10 characters that can be parsed to a timestamp in the format "YYYYmmddHHMMSS", with the "202" in the year 2020 removed, resuling in "Ymmddhhmmss". When converted to integer in the year 2020, timestamps from single digit months (Jan to September) will result in the loss of 2 leading zeros and 1 leading zero in all other cases. The best approach would be to make a single identifier as an anchor and subtracting by 1 incrementally for each new Concept. This identifier will be unique with the one caveat that identifier assignment may not occur at overlapping times. This is advantagous over adding incrementally because it could technically cause collisions should we have 10000 NEW concepts and the concept_ids may overlap with those that are made for another project immediately thereafter. 
