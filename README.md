@@ -16,16 +16,16 @@ library(HemOncExt)
 ## Data  
 The latest release of the bundled HemOnc Extension CONCEPT, CONCEPT_RELATIONSHIP, and CONCEPT_SYNONYM tables can be accessed by `HemOncExt::concept`, `HemOncExt::concept_relationship`, `HemOncExt::concept_synonym`. Release history can be viewed in the Changelog.  
 
-## HemOnc Implementation  
-## Benefits  
+# HemOnc Implementation  
+### Benefits  
 * The output of this process is a HemOnc Extension vocabulary that can seamlessly integrate with the main OMOP Vocabulary while remaining siloed in a separate schema as it awaits further vetting by key stakeholders involved in the HemOnc proper ontology and Athena/OMOP Vocabulary lifecycle.  
 * The same functions in R packages that support standardization processes such as the Chariot R Package (https://patelm9.github.io/chariot/) can be used on these tables by setting the `schema` argument to `hemonc_extension`.  
 * With the exception of HemOnc Extension Components such as investigational drugs that do not map to an Ingredient, all HemOnc Extension concepts can be reused once loaded into this schema, allowing all ongoing mappings to be normalized to a temporary Concept Id while it awaits the vetting process.  
 
-## Requirements  
+### Requirements  
 1. Postgres database with a schema loaded with the OMOP Vocabulary tables  
 
-## Initial Setup  
+### Initial Setup  
 1. `createHemOncExtSchema()`: Create a HemOnc Extension (`hemonc_extension`) schema in a database
 2. `ddlHemOncExtSchema()`: Instantiate OMOP Vocabulary Tables in the newly made `hemonc_extension` schema
 3. Migrate HemOnc Concepts and RxNorm/RxNorm Extension Ingredients/Precise Ingredients to the `hemonc_extension` schema to create new relationships:  
@@ -35,7 +35,7 @@ The latest release of the bundled HemOnc Extension CONCEPT, CONCEPT_RELATIONSHIP
                 hemOncExt::migrateConceptRelationship(conn = conn, source_schema = "public")  
                 hemOncExt::migrateConceptSynonym(conn = conn, source_schema = "public")  
 ```
-### Maintenance  
+#### Maintenance  
 Every time an update is made to HemOnc or RxNorm/RxNorm Extension main OMOP vocabulary, the `hemonc_extension` schema should be dropped and the above functions rerun on the newest instance of the vocabulary.  
 
 ## Details  
