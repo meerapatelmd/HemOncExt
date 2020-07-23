@@ -10,10 +10,11 @@ Create new Oncology treatment concepts that follows the conventions of the OMOP 
 ```
 library(devtools)  
 devtools::install_github("patelm9/HemOncExt")
+library(HemOncExt)
 ```  
 
 ## Data  
-For users solely interested in accessing the bundled HemOnc Extension CONCEPT, CONCEPT_RELATIONSHIP, and CONCEPT_SYNONYM tables, 
+The latest release of the bundled HemOnc Extension CONCEPT, CONCEPT_RELATIONSHIP, and CONCEPT_SYNONYM tables can be accessed by `HemOncExt::concept`, `HemOncExt::concept_relationship`, `HemOncExt::concept_synonym`. Release history can be viewed in the Changelog.  
 
 ## HemOnc Implementation  
 ## Benefits  
