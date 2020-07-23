@@ -18,9 +18,9 @@ The latest release of the bundled HemOnc Extension CONCEPT, CONCEPT_RELATIONSHIP
 
 ## HemOnc Implementation  
 ## Benefits  
-The output of this process is a HemOnc Extension vocabulary that can seamlessly integrate with the main OMOP Vocabulary while remaining siloed in a separate schema as it awaits further vetting by key stakeholders involved in the HemOnc proper ontology and Athena/OMOP Vocabulary lifecycle.  
-The same functions in R packages that support standardization processes such as the Chariot R Package (https://patelm9.github.io/chariot/) can be used on these tables by setting the `schema` argument to `hemonc_extension`.  
-With the exception of HemOnc Extension Components such as investigational drugs that do not map to an Ingredient, all HemOnc Extension concepts can be reused once loaded into this schema, allowing all ongoing mappings to be normalized to a temporary Concept Id while it awaits the vetting process.  
+* The output of this process is a HemOnc Extension vocabulary that can seamlessly integrate with the main OMOP Vocabulary while remaining siloed in a separate schema as it awaits further vetting by key stakeholders involved in the HemOnc proper ontology and Athena/OMOP Vocabulary lifecycle.  
+* The same functions in R packages that support standardization processes such as the Chariot R Package (https://patelm9.github.io/chariot/) can be used on these tables by setting the `schema` argument to `hemonc_extension`.  
+* With the exception of HemOnc Extension Components such as investigational drugs that do not map to an Ingredient, all HemOnc Extension concepts can be reused once loaded into this schema, allowing all ongoing mappings to be normalized to a temporary Concept Id while it awaits the vetting process.  
 
 ## Requirements  
 1. Postgres database with a schema loaded with the OMOP Vocabulary tables  
@@ -79,12 +79,11 @@ The best approach to use generate an identifier as described is to process new c
 ## Minor Caveats  
 For the year 2020 and as well as any case of a single digit month regardless of year, leading zeros are removed once the string is converted to an integer. For example, an original timestamp of 2020-07-23 13:41:31 EDT, rendered as a string "20200723134131", truncated to "00723134131", and when converted to an integer, the leading zeros are lost and the final value returned is 723134106. Though this is still a unique identifier in these circumstances, it is important to note that under some conditions, the leading zeros may need to padded back, such as would be the case if one were interested in ever parsing the timestamp from the identifier (thought this may not always work since time and integer are 2 completely different representations).  
 
-### Steps  
-#### Requirements: 
-Source dataframe should have a unique identifier at the row level that represents an instance of a HemOnc Regimen along with its Hemonc Components. dataframe with a single unique identifier, NEW Regimen, any NEW Component, and Ingredient (RxNorm) column representing the Regimen-Component-Ingredient Axis in the HemOnc ontology. The contents will be in Label format "{concept_id|NEW} {concept_name}".  
-1. Quality Rules: 1 Regimen per row, At least 1 Component per Regimen, Each Component has exactly 1 RxNorm Ingredient or RxNorm Precise Ingredient.  
-
-
-4, Enumerate all NEW concepts with this batch into a single dataframe
-5. Populate NEW Concepts by concept_class_id
-1. Tables to downloadable data package
+### Steps (*In Process*) 
+#### Input Requirements: 
+Source dataframe should have a unique identifier at the row level that represents an instance of a new Regimen along with its new and HemOnc proper Components, with the values represented in a Label format "{concept_id|NEW} {concept_name}".  
+The following data quality rules on the source dataframe and failure to meet these benchmarks will return an error and further processing will stop.  
+    1. 1 Regimen per row. 
+    2. At least 1 Component per Regimen  
+    3. Each Component has exactly 1 or less RxNorm Ingredient or RxNorm Precise Ingredient.  
+    4. Values in Label format "{concept_id|NEW} {concept_name}"
