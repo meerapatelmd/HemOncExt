@@ -1,4 +1,4 @@
-# HemOnc Extension (HemOncExt R Package)  
+# HemOnc Extension (HemOncExt R Package) 
 ## Overview  
 The HemOncExt, short for HemOnc Extension is an R Package that supports creating new Oncology treatment concepts in the OMOP CDM Vocabulary architecture. This is achieved by creating a separate set of OMOP Vocabulary tables in a `hemonc_extension` schema in the same database storing the vocabularies and migrating a copy of the HemOnc and RxNorm/RxNorm Extension Ingredient subset of the Athena Vocabularies to this new schema to form the building blocks for new HemOnc relationships. 
 
