@@ -1,7 +1,7 @@
 Package: HemOncExt
 Type: Package
 Title: HemOncExt package
-Version: 0.1.0
+Version: 0.2.0
 Author: Meera Y. Patel, MD <patelmeeray@gmail.com>
 Maintainer: Meera Y. Patel, MD <patelmeeray@gmail.com>
 Description: This package creates and maintains Oncology treatment concepts in the HemOnc ontology.
