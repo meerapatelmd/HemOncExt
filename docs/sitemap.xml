@@ -4,6 +4,15 @@
     <loc>https://patelm9.github.io/HemOncExt//index.html</loc>
   </url>
   <url>
+    <loc>https://patelm9.github.io/HemOncExt//reference/checkCardinality.html</loc>
+  </url>
+  <url>
+    <loc>https://patelm9.github.io/HemOncExt//reference/checkFormat.html</loc>
+  </url>
+  <url>
+    <loc>https://patelm9.github.io/HemOncExt//reference/checkIngredientCol.html</loc>
+  </url>
+  <url>
     <loc>https://patelm9.github.io/HemOncExt//reference/concept.html</loc>
   </url>
   <url>
@@ -16,6 +25,9 @@
     <loc>https://patelm9.github.io/HemOncExt//reference/concept_synonym.html</loc>
   </url>
   <url>
+    <loc>https://patelm9.github.io/HemOncExt//reference/configureInput.html</loc>
+  </url>
+  <url>
     <loc>https://patelm9.github.io/HemOncExt//reference/constrainHemOncExtSchema.html</loc>
   </url>
   <url>
@@ -23,6 +35,12 @@
   </url>
   <url>
     <loc>https://patelm9.github.io/HemOncExt//reference/ddlHemOncExtSchema.html</loc>
+  </url>
+  <url>
+    <loc>https://patelm9.github.io/HemOncExt//reference/filterAnyNewConcept.html</loc>
+  </url>
+  <url>
+    <loc>https://patelm9.github.io/HemOncExt//reference/filterOutNA.html</loc>
   </url>
   <url>
     <loc>https://patelm9.github.io/HemOncExt//reference/getIdentifier.html</loc>
@@ -50,6 +68,9 @@
   </url>
   <url>
     <loc>https://patelm9.github.io/HemOncExt//reference/parseIdentifierCol.html</loc>
+  </url>
+  <url>
+    <loc>https://patelm9.github.io/HemOncExt//reference/separateRowsInput.html</loc>
   </url>
   <url>
     <loc>https://patelm9.github.io/HemOncExt//reference/updateRawData.html</loc>
