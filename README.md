@@ -85,7 +85,7 @@ For the year 2020 and as well as any case of a single digit month regardless of 
 ## SECTIONS IN DEVELOPMENT
 ### Steps 
 #### Input Requirements: 
-Source dataframe should have a unique identifier at the row level that represents an instance of a new Regimen along with its new and HemOnc proper Components, with the values represented in a Label format "{concept_id|NEW} {concept_name}".  
+Source dataframe should have a unique identifier at the row level that represents an instance of a new Regimen along with its new and HemOnc proper Components, with the values represented in a Label format "{concept_id|NEW} {concept_name}".  If there is 1 or more entries for a given Regimen, for example a 3 component regimen, the components should be separated by a carriage return in Excel. If a different separator is used, such as a pipe, it may be inputed. 
 The following data quality rules on the source dataframe and failure to meet these benchmarks will return an error and further processing will stop.  
     1. 1 Regimen per row. 
     2. At least 1 Component per Regimen  
