@@ -2,7 +2,7 @@ pandoc: 2.7.3
 pkgdown: 1.5.1
 pkgdown_sha: ~
 articles: []
-last_built: 2020-07-24T06:51Z
+last_built: 2020-07-24T06:56Z
 urls:
   reference: https://patelm9.github.io/HemOncExt//reference
   article: https://patelm9.github.io/HemOncExt//articles
