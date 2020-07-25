@@ -1,6 +1,11 @@
-
-
-
+#' Ingest New Concept
+#' @description
+#' An observation in the new concept relationship dataframe is not appended to the HemOnc Concept table if the same concept_name, is found. Such cases are returned as `qaIngestConceptTable` and `qaIngestConceptTable2` is the result of a followup qa where any of the rows in the input are not found in the refreshed Concept Table.
+#' @import purrr
+#' @import rubix
+#' @import pg13
+#' @import dplyr
+#' @export
 
 
 ingestConceptTable <-
