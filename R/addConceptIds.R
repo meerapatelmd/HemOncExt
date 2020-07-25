@@ -1,8 +1,11 @@
-
-
-
-
-
+#' Replace the "NEW" in the label with a Concept Id
+#' @import tidyr
+#' @import rubix
+#' @import dplyr
+#' @import chariot
+#' @import pg13
+#' @import tidyr
+#' @export
 
 addConceptIds <-
         function(.input,

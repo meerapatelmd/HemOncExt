@@ -52,9 +52,9 @@ checkIngredientCol <-
 
                         if (nrow(qa)) {
 
-                                qaCheckIngredientCol <<- qa
+                                flagCheckIngredientCol1 <<- qa
 
-                                stop('Some Component to Ingredient mappings are not 1:1. See qaCheckIngredientCol object.')
+                                warning('Some Component to Ingredient mappings are not 1:1. See flagCheckIngredientCol1 object.')
                         }
 
                         #Convert the Ingredient Merge format into Label format
@@ -80,8 +80,8 @@ checkIngredientCol <-
                                 dplyr::filter(ingredient_length != 1)
 
                         if (nrow(qa)) {
-                                qaCheckIngredientCol <<- qa
-                                stop('Some Component to Ingredient mappings are not 1:1. See qaCheckIngredientCol object.')
+                                flagCheckIngredientCol2 <<- qa
+                                warning('Some Component to Ingredient mappings are not 1:1. See flagCheckIngredientCol2 object.')
                         }
 
                         return(.input)

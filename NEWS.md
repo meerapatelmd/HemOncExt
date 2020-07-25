@@ -1,5 +1,5 @@
 # HemOncExt 0.2.0  
-- Converted portion of Run.R file for input processing and `check` functions
+- Converted portion of Run.R file for input processing and `check` functions  
 
 # HemOncExt 0.1.0  
 ## First Release  

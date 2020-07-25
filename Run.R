@@ -1,12 +1,12 @@
-input <- broca::read_full_excel("~/Memorial Sloan Kettering Cancer Center/Esophagogastric REDCap Standardization - KMI Only - KMI Only/Mapping Files/Esophagus Treatment Mappings v5.xlsx")
+input <- broca::read_full_excel("~/Memorial Sloan Kettering Cancer Center/Esophagogastric REDCap Standardization - KMI Only - KMI Only/2020-08-07/Esophagus Treatment Mappings v7.xlsx")
 input <- input$Final_02
-id_col_name <- "identifier"
-regimen_col_name <- "CurrentRegimen"
-component_col_name <- "CurrentComponent"
+id_col_name <- "Row Number"
+regimen_col_name <- "Regimen"
+component_col_name <- "Component"
 ingredient_col_name <- NULL
 
 input2 <-
-configureInput(.input = input,
+HemOncExt::configureInput(.input = input,
                id_col_name = id_col_name,
                regimen_col_name = regimen_col_name,
                component_col_name = component_col_name,
@@ -14,25 +14,25 @@ configureInput(.input = input,
 
 input3 <-
         input2 %>%
-        separateRowsInput()
+        HemOncExt::separateRowsInput()
 
 input4 <-
         input3 %>%
-        filterOutNA()
+        HemOncExt::filterOutNA()
 
 # Checkpoint: if that particular checkpoint is passed, the function returns the argument unchanged, otherwise a respective QA object is created in the Global Environment summarizing the error
 # Does each observation have exactly 1 Regimen based on unique length?
 staged <-
         input4 %>%
-        checkCardinality() %>%
-        checkFormat() %>%
+        HemOncExt::checkCardinality() %>%
+        HemOncExt::checkFormat() %>%
         checkIngredientCol()
 
 
 # Filtering for any NEW values in the non-ID Fields and adding a new concept id in place of NEW in the label. The NEW demarcation is offloaded onto `New R` and `New C` columns
 output <-
         staged %>%
-        filterAnyNewConcept() %>%
+        HemOncExt::filterAnyNewConcept() %>%
         addConceptIds(conn = conn)
 
 # Add all NEW concepts to the concept table
