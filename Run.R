@@ -1,53 +1,123 @@
-# input <- broca::read_full_excel("~/Memorial Sloan Kettering Cancer Center/Esophagogastric REDCap Standardization - KMI Only - KMI Only/Mapping Files/Esophagus Treatment Mappings v5.xlsx")
-# input <- input$Final_02
-# id_col_name <- "identifier"
-# regimen_col_name <- "CurrentRegimen"
-# component_col_name <- "CurrentComponent"
-# ingredient_col_name <- NULL
-#
-# input2 <-
-# configureInput(.input = input,
-#                id_col_name = id_col_name,
-#                regimen_col_name = regimen_col_name,
-#                component_col_name = component_col_name,
-#                ingredient_col_name = ingredient_col_name)
-#
-# input3 <-
-#         input2 %>%
-#         separateRowsInput()
-#
-# input4 <-
-#         input3 %>%
-#         filterOutNA()
-#
-# # Checkpoint: if that particular checkpoint is passed, the function returns the argument unchanged, otherwise a respective QA object is created in the Global Environment summarizing the error
-# # Does each observation have exactly 1 Regimen based on unique length?
-# staged <-
-#         input4 %>%
-#         checkCardinality() %>%
-#         checkFormat() %>%
-#         checkIngredientCol()
-#
-#
-# # Filtering for any NEW values in the non-ID Fields
-# output <-
-#         staged %>%
-#         filterAnyNewConcept()
+input <- broca::read_full_excel("~/Memorial Sloan Kettering Cancer Center/Esophagogastric REDCap Standardization - KMI Only - KMI Only/Mapping Files/Esophagus Treatment Mappings v5.xlsx")
+input <- input$Final_02
+id_col_name <- "identifier"
+regimen_col_name <- "CurrentRegimen"
+component_col_name <- "CurrentComponent"
+ingredient_col_name <- NULL
 
-# # Possible Scenarios
-# # A. NEW Regimen only: 1. Concept Table entry, 2. Concept Relationship: Has antineoplastic relationship_id to Component then do inverse relationship. 3. No Synonyms for NEW Regimens expected
-# # B. NEW Regimen because there is at least 1 NEW Component
-#         # Enumerate both Regimens and Components at once
-#         # Add NEW Concepts to Concept Table,
-#         # Concept Relationship:  Antineoplastic of Regimen, + inverse (all concepts including the non-new ones!)
-#         # Add Component Synonyms to synonym table
-#
-# output2 <-
-#         output %>%
-#         group_by(ID) %>%
-#         mutate(has_new_Component = any(grepl("NEW ", Component))) %>%
-#         ungroup()
-#
+input2 <-
+configureInput(.input = input,
+               id_col_name = id_col_name,
+               regimen_col_name = regimen_col_name,
+               component_col_name = component_col_name,
+               ingredient_col_name = ingredient_col_name)
+
+input3 <-
+        input2 %>%
+        separateRowsInput()
+
+input4 <-
+        input3 %>%
+        filterOutNA()
+
+# Checkpoint: if that particular checkpoint is passed, the function returns the argument unchanged, otherwise a respective QA object is created in the Global Environment summarizing the error
+# Does each observation have exactly 1 Regimen based on unique length?
+staged <-
+        input4 %>%
+        checkCardinality() %>%
+        checkFormat() %>%
+        checkIngredientCol()
+
+
+# Filtering for any NEW values in the non-ID Fields and adding a new concept id in place of NEW in the label. The NEW demarcation is offloaded onto `New R` and `New C` columns
+output <-
+        staged %>%
+        filterAnyNewConcept() %>%
+        addConceptIds(conn = conn)
+
+# Add all NEW concepts to the concept table
+new_concept_table <-
+output %>%
+        tidyr::pivot_longer(cols = starts_with("New "),
+                            names_to = "Type",
+                            values_to = "New") %>%
+        dplyr::mutate(Type = ifelse(Type == "New R", "Regimen", "Component")) %>%
+        tidyr::pivot_longer(cols = c(Regimen, Component),
+                            names_to = "concept_class_id",
+                            values_to = "Concept") %>%
+        dplyr::filter(Type == concept_class_id,
+                      !is.na(New)) %>%
+        dplyr::select(Concept,
+                      concept_class_id) %>%
+        chariot::parseLabel(Concept, remove = TRUE) %>%
+        dplyr::mutate(domain_id = ifelse(concept_class_id == "Regimen", "Regimen", "Drug"),
+                      vocabulary_id = "HemOnc Extension",
+                      standard_concept = NA,
+                      concept_code = 0,
+                      valid_start_date = Sys.Date(),
+                      valid_end_date = as.Date("2099-12-31"),
+                      invalid_reason = NA) %>%
+        dplyr::select(concept_id,
+                      concept_name,
+                      domain_id,
+                      vocabulary_id,
+                      concept_class_id,
+                      standard_concept,
+                      concept_code,
+                      valid_start_date,
+                      valid_end_date) %>%
+        dplyr::distinct()
+
+
+# Regimen to Component Relationship
+final_relationship_i <-
+        output %>%
+        chariot::parseLabel(Regimen, remove = TRUE) %>%
+        rubix::rename_at_prefix(concept_id, concept_name, prefix = "regimen_") %>%
+        chariot::parseLabel(Component, remove = TRUE) %>%
+        rubix::rename_at_prefix(concept_id, concept_name, prefix = "component_") %>%
+        dplyr::transmute(concept_id_1 = regimen_concept_id,
+                         concept_id_2 = component_concept_id,
+                         relationship_id = "Has antineoplastic",
+                         valid_start_date = Sys.Date(),
+                         valid_end_date = as.Date("2099-12-31"),
+                         invalid_reason = NA)
+
+final_relationship_ii <-
+        output %>%
+        chariot::parseLabel(Regimen, remove = TRUE) %>%
+        rubix::rename_at_prefix(concept_id, concept_name, prefix = "regimen_") %>%
+        chariot::parseLabel(Component, remove = TRUE) %>%
+        rubix::rename_at_prefix(concept_id, concept_name, prefix = "component_") %>%
+        dplyr::transmute(concept_id_1 = component_concept_id,
+                         concept_id_2 = regimen_concept_id,
+                         relationship_id = "Antineoplastic of",
+                         valid_start_date = Sys.Date(),
+                         valid_end_date = as.Date("2099-12-31"),
+                         invalid_reason = NA)
+
+final_relationship <-
+        list(final_relationship_i,
+                         final_relationship_ii) %>%
+        purrr::map(chariot::ids_to_integer) %>%
+        dplyr::bind_rows() %>%
+        dplyr::distinct()
+
+# pg13::appendTable(conn = conn,
+#                   schema = "hemonc_extension",
+#                   tableName = "concept_relationship",
+#                   .data = final_relationship %>%
+#                           as.data.frame())
+
+
+# Possible Scenarios
+# A. NEW Regimen only: 1. Concept Table entry, 2. Concept Relationship: Has antineoplastic relationship_id to Component then do inverse relationship. 3. No Synonyms for NEW Regimens expected
+# B. NEW Regimen because there is at least 1 NEW Component
+        # Enumerate both Regimens and Components at once
+        # Add NEW Concepts to Concept Table,
+        # Concept Relationship:  Antineoplastic of Regimen, + inverse (all concepts including the non-new ones!)
+        # Add Component Synonyms to synonym table
+
 # # NEW Regimens Only
 # output3a <-
 #         output2 %>%
@@ -92,16 +162,16 @@
 #
 # final_concepts <-
 #         output3a_3 %>%
-#         dplyr::select(concept_id,
-#                       concept_name,
-#                       domain_id,
-#                       vocabulary_id,
-#                       concept_class_id,
-#                       standard_concept,
-#                       concept_code,
-#                       valid_start_date,
-#                       valid_end_date) %>%
-#         dplyr::distinct()
+        # dplyr::select(concept_id,
+        #               concept_name,
+        #               domain_id,
+        #               vocabulary_id,
+        #               concept_class_id,
+        #               standard_concept,
+        #               concept_code,
+        #               valid_start_date,
+        #               valid_end_date) %>%
+        # dplyr::distinct()
 #
 # pg13::appendTable(conn = conn,
 #                   schema = "hemonc_extension",
@@ -140,17 +210,7 @@
 #                          valid_end_date = as.Date("2099-12-31"),
 #                          invalid_reason = NA)
 #
-# final_relationship <-
-#         list(final_relationship_i,
-#                          final_relationship_ii) %>%
-#         purrr::map(chariot::ids_to_integer) %>%
-#         dplyr::bind_rows()
-#
-# pg13::appendTable(conn = conn,
-#                   schema = "hemonc_extension",
-#                   tableName = "concept_relationship",
-#                   .data = final_relationship %>%
-#                           as.data.frame())
+
 #
 #
 # output3b <-

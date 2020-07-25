@@ -7,8 +7,10 @@ checkCardinality <-
         function(.input) {
 
                 # Stop if empty from a previous checkpoint
-                if (nrow(.input)) {
+                if (nrow(.input) == 0) {
+
                         stop('input is empty')
+
                 }
 
                 qa <-
