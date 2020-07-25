@@ -23,7 +23,7 @@ migrateConceptSynonym <-
 
                 if (extension_nrow$count == 0) {
 
-                        base <- system.file(package = "hemOncExt")
+                        base <- system.file(package = "HemOncExt")
                         path <- paste0(base, "/sql/migrateConceptSynonym.sql")
 
                         sql_statement <- SqlRender::render(SqlRender::readSql(path),
