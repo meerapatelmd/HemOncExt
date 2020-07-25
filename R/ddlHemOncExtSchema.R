@@ -14,7 +14,7 @@ ddlHemOncExtSchema <-
 
                 if (length(hemOncExtTables) == 0) {
 
-                        base <- system.file(package = "hemOncExt")
+                        base <- system.file(package = "HemOncExt")
                         path <- paste0(base, "/sql/postgresqlddl.sql")
 
                         sql_statement <- SqlRender::render(SqlRender::readSql(path),
