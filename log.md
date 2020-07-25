@@ -10,3 +10,4 @@ Timestamp	Activity Type	Function	File	Details
 2020-07-24 21:33:00	read	read_full_excel	~/Memorial Sloan Kettering Cancer Center/Esophagogastric REDCap Standardization - KMI Only - KMI Only/Mapping Files/Esophagus Treatment Mappings v5.xlsx	
 2020-07-24 22:38:17	read	read_full_excel	~/Memorial Sloan Kettering Cancer Center/KMI and Esophagogastric REDCAp - General/2020-07-24 Meeting/Esophagus Treatment Mappings v6.xlsx	
 2020-07-24 22:44:07	read	read_full_excel	~/Memorial Sloan Kettering Cancer Center/Esophagogastric REDCap Standardization - KMI Only - KMI Only/2020-08-07/Esophagus Treatment Mappings v7.xlsx	
+2020-07-24 22:54:43	read	read_full_excel	~/Memorial Sloan Kettering Cancer Center/Esophagogastric REDCap Standardization - KMI Only - KMI Only/2020-08-07/Esophagus Treatment Mappings v7.xlsx	

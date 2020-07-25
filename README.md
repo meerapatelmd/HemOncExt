@@ -36,7 +36,7 @@ The latest release of the bundled HemOnc Extension CONCEPT, CONCEPT_RELATIONSHIP
                 hemOncExt::migrateConceptSynonym(conn = conn, source_schema = "public")  
 ```
 #### Maintenance  
-Every time an update is made to HemOnc or RxNorm/RxNorm Extension main OMOP vocabulary, the `hemonc_extension` schema should be dropped and the above functions rerun on the newest instance of the vocabulary.  
+Every time an update is made to HemOnc or RxNorm/RxNorm Extension main OMOP vocabulary, the HemOnc Extension vocabulary should be exported, the `hemonc_extension` schema should be dropped and the above functions rerun on the newest instance of the vocabulary, and the exported data reloaded.
 
 ## Details  
 ### Parameters  

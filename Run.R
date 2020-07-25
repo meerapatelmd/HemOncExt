@@ -1,72 +1,85 @@
-# input <- broca::read_full_excel("~/Memorial Sloan Kettering Cancer Center/Esophagogastric REDCap Standardization - KMI Only - KMI Only/2020-08-07/Esophagus Treatment Mappings v7.xlsx")
-# input <- input$Final_02
-# id_col_name <- "Row Number"
-# regimen_col_name <- "Regimen"
-# component_col_name <- "Component"
-# ingredient_col_name <- NULL
-#
-# input2 <-
-# HemOncExt::configureInput(.input = input,
-#                id_col_name = id_col_name,
-#                regimen_col_name = regimen_col_name,
-#                component_col_name = component_col_name,
-#                ingredient_col_name = ingredient_col_name)
-#
-# input3 <-
-#         input2 %>%
-#         HemOncExt::separateRowsInput()
-#
-# input4 <-
-#         input3 %>%
-#         HemOncExt::filterOutNA()
-#
-# # Checkpoint: if that particular checkpoint is passed, the function returns the argument unchanged, otherwise a respective QA object is created in the Global Environment summarizing the error
-# # Does each observation have exactly 1 Regimen based on unique length?
-# staged <-
-#         input4 %>%
-#         HemOncExt::checkCardinality() %>%
-#         HemOncExt::checkFormat() %>%
-#         checkIngredientCol()
-#
-#
-# # Filtering for any NEW values in the non-ID Fields and adding a new concept id in place of NEW in the label. The NEW demarcation is offloaded onto `New R` and `New C` columns
-# output <-
-#         staged %>%
-#         HemOncExt::filterAnyNewConcept() %>%
-#         addConceptIds(conn = conn)
-#
-# # Add all NEW concepts to the concept table
-# new_concept_table <-
-# output %>%
-#         tidyr::pivot_longer(cols = starts_with("New "),
-#                             names_to = "Type",
-#                             values_to = "New") %>%
-#         dplyr::mutate(Type = ifelse(Type == "New R", "Regimen", "Component")) %>%
-#         tidyr::pivot_longer(cols = c(Regimen, Component),
-#                             names_to = "concept_class_id",
-#                             values_to = "Concept") %>%
-#         dplyr::filter(Type == concept_class_id,
-#                       !is.na(New)) %>%
-#         dplyr::select(Concept,
-#                       concept_class_id) %>%
-#         chariot::parseLabel(Concept, remove = TRUE) %>%
-#         dplyr::mutate(domain_id = ifelse(concept_class_id == "Regimen", "Regimen", "Drug"),
-#                       vocabulary_id = "HemOnc Extension",
-#                       standard_concept = NA,
-#                       concept_code = 0,
-#                       valid_start_date = Sys.Date(),
-#                       valid_end_date = as.Date("2099-12-31"),
-#                       invalid_reason = NA) %>%
-#         dplyr::select(concept_id,
-#                       concept_name,
-#                       domain_id,
-#                       vocabulary_id,
-#                       concept_class_id,
-#                       standard_concept,
-#                       concept_code,
-#                       valid_start_date,
-#                       valid_end_date) %>%
-#         dplyr::distinct()
+input <- broca::read_full_excel("~/Memorial Sloan Kettering Cancer Center/Esophagogastric REDCap Standardization - KMI Only - KMI Only/2020-08-07/Esophagus Treatment Mappings v7.xlsx")
+input <- input$Final_02
+id_col_name <- "Row Number"
+regimen_col_name <- "Regimen"
+component_col_name <- "Component"
+ingredient_col_name <- NULL
+
+input2 <-
+HemOncExt::configureInput(.input = input,
+               id_col_name = id_col_name,
+               regimen_col_name = regimen_col_name,
+               component_col_name = component_col_name,
+               ingredient_col_name = ingredient_col_name)
+
+input3 <-
+        input2 %>%
+        HemOncExt::separateRowsInput()
+
+input4 <-
+        input3 %>%
+        HemOncExt::filterOutNA()
+
+# Checkpoint: if that particular checkpoint is passed, the function returns the argument unchanged, otherwise a respective QA object is created in the Global Environment summarizing the error
+# Does each observation have exactly 1 Regimen based on unique length?
+staged <-
+        input4 %>%
+        HemOncExt::checkCardinality() %>%
+        HemOncExt::checkFormat() %>%
+        checkIngredientCol()
+
+
+# Filtering for any NEW values in the non-ID Fields and adding a new concept id in place of NEW in the label. The NEW demarcation is offloaded onto `New R` and `New C` columns
+output <-
+        staged %>%
+        HemOncExt::filterAnyNewConcept() %>%
+        HemOncExt::addConceptIds(conn = conn)
+
+# Add all NEW concepts to the concept table
+new_concept_table <-
+output %>%
+        tidyr::pivot_longer(cols = starts_with("New "),
+                            names_to = "Type",
+                            values_to = "New") %>%
+        dplyr::mutate(Type = ifelse(Type == "New R", "Regimen", "Component")) %>%
+        tidyr::pivot_longer(cols = c(Regimen, Component),
+                            names_to = "concept_class_id",
+                            values_to = "Concept") %>%
+        dplyr::filter(Type == concept_class_id,
+                      !is.na(New)) %>%
+        dplyr::select(Concept,
+                      concept_class_id) %>%
+        chariot::parseLabel(Concept, remove = TRUE) %>%
+        dplyr::mutate(domain_id = ifelse(concept_class_id == "Regimen", "Regimen", "Drug"),
+                      vocabulary_id = "HemOnc Extension",
+                      standard_concept = NA,
+                      concept_code = 0,
+                      valid_start_date = Sys.Date(),
+                      valid_end_date = as.Date("2099-12-31"),
+                      invalid_reason = NA) %>%
+        dplyr::select(concept_id,
+                      concept_name,
+                      domain_id,
+                      vocabulary_id,
+                      concept_class_id,
+                      standard_concept,
+                      concept_code,
+                      valid_start_date,
+                      valid_end_date) %>%
+        dplyr::distinct() %>%
+        chariot::ids_to_integer()
+
+
+new_concept_table <-
+        convertConceptTable(output)
+
+ingestConceptTable(new_concept_table,
+                   conn = conn)
+
+
+
+
+
 #
 #
 # # Regimen to Component Relationship
