@@ -91,3 +91,8 @@ The following data quality rules on the source dataframe and failure to meet the
     2. At least 1 Component per Regimen  
     3. Each Component has exactly 1 or less RxNorm Ingredient or RxNorm Precise Ingredient.  
     4. Values in Label format "{concept_id|NEW} {concept_name}"
+
+## Code of Conduct
+  
+  Please note that the HemOncExt project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
+
