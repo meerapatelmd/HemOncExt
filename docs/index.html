@@ -52,7 +52,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/patelm9/HemOncExt/">
+  <a href="https://github.com/meerapatelmd/HemOncExt/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -88,7 +88,7 @@ Create new Oncology treatment concepts that follows the conventions of the OMOP 
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<pre><code><a href="https://devtools.r-lib.org//reference">library(devtools)  
+<pre><code><a href="https://devtools.r-lib.org/">library(devtools)  
 devtools::install_github("patelm9/HemOncExt")
 library(HemOncExt)</a></code></pre>
 </div>
@@ -137,7 +137,7 @@ library(HemOncExt)</a></code></pre>
 <div id="maintenance" class="section level4">
 <h4 class="hasAnchor">
 <a href="#maintenance" class="anchor"></a>Maintenance</h4>
-<p>Every time an update is made to HemOnc or RxNorm/RxNorm Extension main OMOP vocabulary, the <code>hemonc_extension</code> schema should be dropped and the above functions rerun on the newest instance of the vocabulary.</p>
+<p>Every time an update is made to HemOnc or RxNorm/RxNorm Extension main OMOP vocabulary, the HemOnc Extension vocabulary should be exported, the <code>hemonc_extension</code> schema should be dropped and the above functions rerun on the newest instance of the vocabulary, and the exported data reloaded.</p>
 </div>
 </div>
 <div id="details" class="section level2">
@@ -244,6 +244,11 @@ A. New HemOnc Extension Regimen: can be composed of entirely HemOnc proper Compo
 </div>
 </div>
 </div>
+<div id="code-of-conduct" class="section level2">
+<h2 class="hasAnchor">
+<a href="#code-of-conduct" class="anchor"></a>Code of Conduct</h2>
+<p>Please note that the HemOncExt project is released with a <a href="https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
+</div>
 </div>
 
   </div>
@@ -252,9 +257,9 @@ A. New HemOnc Extension Regimen: can be composed of entirely HemOnc proper Compo
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/patelm9/HemOncExt/">https://​github.com/​patelm9/​HemOncExt/​</a>
+<li>Browse source code at <br><a href="https://github.com/meerapatelmd/HemOncExt/">https://​github.com/​meerapatelmd/​HemOncExt/​</a>
 </li>
-<li>Report a bug at <br><a href="https://github.com/patelm9/HemOncExt/issues%20">https://​github.com/​patelm9/​HemOncExt/​issues </a>
+<li>Report a bug at <br><a href="https://github.com/meerapatelmd/HemOncExt/issues%20">https://​github.com/​meerapatelmd/​HemOncExt/​issues </a>
 </li>
 </ul>
 </div>
@@ -281,7 +286,7 @@ A. New HemOnc Extension Regimen: can be composed of entirely HemOnc proper Compo
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

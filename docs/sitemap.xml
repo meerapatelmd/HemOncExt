@@ -4,6 +4,9 @@
     <loc>https://patelm9.github.io/HemOncExt//index.html</loc>
   </url>
   <url>
+    <loc>https://patelm9.github.io/HemOncExt//reference/addConceptIds.html</loc>
+  </url>
+  <url>
     <loc>https://patelm9.github.io/HemOncExt//reference/checkCardinality.html</loc>
   </url>
   <url>
@@ -31,10 +34,19 @@
     <loc>https://patelm9.github.io/HemOncExt//reference/constrainHemOncExtSchema.html</loc>
   </url>
   <url>
+    <loc>https://patelm9.github.io/HemOncExt//reference/convertConceptTable.html</loc>
+  </url>
+  <url>
+    <loc>https://patelm9.github.io/HemOncExt//reference/convertRelationshipTable.html</loc>
+  </url>
+  <url>
     <loc>https://patelm9.github.io/HemOncExt//reference/createHemOncExtSchema.html</loc>
   </url>
   <url>
     <loc>https://patelm9.github.io/HemOncExt//reference/ddlHemOncExtSchema.html</loc>
+  </url>
+  <url>
+    <loc>https://patelm9.github.io/HemOncExt//reference/extractNewRegimenName.html</loc>
   </url>
   <url>
     <loc>https://patelm9.github.io/HemOncExt//reference/filterAnyNewConcept.html</loc>
@@ -44,6 +56,12 @@
   </url>
   <url>
     <loc>https://patelm9.github.io/HemOncExt//reference/getIdentifier.html</loc>
+  </url>
+  <url>
+    <loc>https://patelm9.github.io/HemOncExt//reference/ingestConceptTable.html</loc>
+  </url>
+  <url>
+    <loc>https://patelm9.github.io/HemOncExt//reference/ingestRelationshipTable.html</loc>
   </url>
   <url>
     <loc>https://patelm9.github.io/HemOncExt//reference/isLocalIdentifier.html</loc>
@@ -71,6 +89,9 @@
   </url>
   <url>
     <loc>https://patelm9.github.io/HemOncExt//reference/separateRowsInput.html</loc>
+  </url>
+  <url>
+    <loc>https://patelm9.github.io/HemOncExt//reference/splitByNewRegimenType.html</loc>
   </url>
   <url>
     <loc>https://patelm9.github.io/HemOncExt//reference/updateRawData.html</loc>
